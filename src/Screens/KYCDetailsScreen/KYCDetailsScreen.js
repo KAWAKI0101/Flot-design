@@ -17,6 +17,7 @@ const InputField = ({ label, value, onChangeText, placeholder }) => (
       style={styles.input}
       placeholder={placeholder || `Enter your ${label.toLowerCase()}`}
       value={value}
+      placeholderTextColor={"#999"}
       onChangeText={onChangeText}
     />
   </View>

@@ -31,7 +31,7 @@ const AadhaarVerificationScreen = ({ navigation }) => {
       <Text style={styles.subheading}>Your Data is Completely Secure with us</Text>
 
       <Image
-        source={require('../../assets/Image/AadharOtp.png')} // Replace with actual Aadhaar image path
+        source={require('../../assets/Image/Aadhar.png')} 
         style={styles.image}
         resizeMode="contain"
       />
@@ -39,8 +39,9 @@ const AadhaarVerificationScreen = ({ navigation }) => {
       <Text style={styles.label}>Enter Aadhaar Number</Text>
       <TextInput
         style={styles.input}
-        placeholder="0000 0000 0000"
+        placeholder="0000 1111 2222"
         keyboardType="numeric"
+        placeholderTextColor={"#999"}
         value={aadhaarNumber}
         onChangeText={setAadhaarNumber}
         maxLength={14}

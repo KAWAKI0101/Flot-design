@@ -11,6 +11,8 @@ import LoanRejectedScreen from '../Screens/RejectScreen/LoanRejectedScreen.js';
 import KYCDetailsScreen from '../Screens/KYCDetailsScreen/KYCDetailsScreen.js';
 import AadhaarVerificationScreen from '../Screens/AadhaarVerification/AadhaarVerificationScreen.js';
 import AadhaarOtpVerificationScreen from '../Screens/AadhaarVerification/AadhaarOtpVerificationScreen.js';
+import SelfieUploadScreen from '../Screens/SelfyScreen/SelfieUploadScreen.js';
+import ConfirmAddressScreen from '../Screens/ConformationScreen/ConfirmAddressScreen.js';
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
@@ -27,6 +29,8 @@ export default function AppNavigator() {
       <Stack.Screen name="KYCScreen" component={KYCDetailsScreen} />
       <Stack.Screen name="Aadhaar" component={AadhaarVerificationScreen} />
       <Stack.Screen name="AadhaarOTP" component={AadhaarOtpVerificationScreen} />
+      <Stack.Screen name="Selfie" component={SelfieUploadScreen} />
+      <Stack.Screen name="ConformAddres" component={ConfirmAddressScreen} />
 
     </Stack.Navigator>
   );

@@ -13,7 +13,7 @@ import { Picker } from '@react-native-picker/picker';
 import LinearGradient from 'react-native-linear-gradient';
 import CheckBox from '@react-native-community/checkbox';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import dummyBasicDetails from '../../DummyData/DummyBasicDetails.js'; // ✅ IMPORT DUMMY DATA
+import dummyBasicDetails from '../../DummyData/DummyBasicDetails.js';
 
 const SubmitBasicDetailsScreen = ({ navigation }) => {
   const [dob, setDob] = useState(dummyBasicDetails.dob);
@@ -84,6 +84,7 @@ const SubmitBasicDetailsScreen = ({ navigation }) => {
       <TextInput
         style={styles.inputBox}
         placeholder="Enter your area pin code"
+        placeholderTextColor="#999"
         keyboardType="numeric"
         value={pincode}
         onChangeText={setPincode}
@@ -93,13 +94,21 @@ const SubmitBasicDetailsScreen = ({ navigation }) => {
       <TextInput
         style={styles.inputBox}
         placeholder="Enter your city"
+        placeholderTextColor="#999"
         value={city}
         onChangeText={setCity}
       />
 
       <Text style={styles.label}>Employment Type</Text>
       <View style={styles.pickerBox}>
-        <Picker selectedValue={employmentType} onValueChange={setEmploymentType}>
+        <Picker
+          selectedValue={employmentType}
+          onValueChange={setEmploymentType}
+          style={{
+            color: employmentType ? '#000' : '#999',
+            fontFamily: 'Okra-Regular',
+          }}
+        >
           <Picker.Item label="Select employment type" value="" />
           <Picker.Item label="Salaried" value="salaried" />
           <Picker.Item label="Self-Employed" value="self-employed" />
@@ -110,6 +119,7 @@ const SubmitBasicDetailsScreen = ({ navigation }) => {
       <TextInput
         style={styles.inputBox}
         placeholder="Enter your income"
+        placeholderTextColor="#999"
         keyboardType="numeric"
         value={monthlyIncome}
         onChangeText={setMonthlyIncome}
@@ -117,7 +127,14 @@ const SubmitBasicDetailsScreen = ({ navigation }) => {
 
       <Text style={styles.label}>Income Received In</Text>
       <View style={styles.pickerBox}>
-        <Picker selectedValue={incomeReceivedIn} onValueChange={setIncomeReceivedIn}>
+        <Picker
+          selectedValue={incomeReceivedIn}
+          onValueChange={setIncomeReceivedIn}
+          style={{
+            color: incomeReceivedIn ? '#000' : '#999',
+            fontFamily: 'Okra-Regular',
+          }}
+        >
           <Picker.Item label="Select mode" value="" />
           <Picker.Item label="Bank" value="bank" />
           <Picker.Item label="Cash" value="cash" />
@@ -125,8 +142,14 @@ const SubmitBasicDetailsScreen = ({ navigation }) => {
       </View>
 
       <View style={styles.checkboxWrapper}>
-        <CheckBox value={accepted} onValueChange={setAccepted} tintColors={{ true: '#6B21A8' }} />
-        <Text style={styles.checkboxText}>I Accept the <Text style={styles.underline}>Terms & Conditions</Text></Text>
+        <CheckBox
+          value={accepted}
+          onValueChange={setAccepted}
+          tintColors={{ true: '#6B21A8' }}
+        />
+        <Text style={styles.checkboxText}>
+          I Accept the <Text style={styles.underline}>Terms & Conditions</Text>
+        </Text>
       </View>
 
       <TouchableOpacity style={styles.buttonWrapper} onPress={handleContinue} activeOpacity={0.9}>

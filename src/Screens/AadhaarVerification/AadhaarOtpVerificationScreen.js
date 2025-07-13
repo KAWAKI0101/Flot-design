@@ -49,8 +49,10 @@ const AadhaarOtpVerificationScreen = ({ navigation }) => {
 
     if (enteredOtp.length === 6) {
       // OTP logic here
-      navigation.navigate('Home'); // or 'SuccessKyc' screen
-    } else {
+      if(enteredOtp === "123456")
+      navigation.navigate('Selfie'); // or 'SuccessKyc' screen
+    }
+     else {
       alert('Please enter the 6-digit OTP');
     }
   };
@@ -61,7 +63,7 @@ const AadhaarOtpVerificationScreen = ({ navigation }) => {
       <Text style={styles.subtitle}>Your Data is Completely Secure with us</Text>
 
       <Image
-        source={require('../../assets/images/verify-phone.png')} // Replace with your image path
+        source={require('../../assets/Image/Verify-phone.png')} // Replace with your image path
         style={styles.image}
         resizeMode="contain"
       />
