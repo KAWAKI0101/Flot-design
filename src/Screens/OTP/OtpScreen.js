@@ -13,7 +13,7 @@ import LinearGradient from 'react-native-linear-gradient';
 
 const OtpScreen = ({ navigation, route }) => {
   const { phone } = route.params || {};
-  const [otp, setOtp] = useState(['', '', '', '']);
+  const [otp, setOtp] = useState(['1', '2', '3', '4']);
   const [timer, setTimer] = useState(59);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const inputs = useRef([]);
@@ -50,6 +50,7 @@ const OtpScreen = ({ navigation, route }) => {
   const handleVerify = () => {
     if (otp.join('').length < 4) return;
     // Add your verification logic here
+    
     navigation.navigate('Home'); // Example
   };
 

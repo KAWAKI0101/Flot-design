@@ -1,3 +1,6 @@
+//['#1E3A8A', '#1E40AF'] Deep Navy	
+
+
 OtpScreen code 
 
 import React, { useRef, useState, useEffect } from 'react';
