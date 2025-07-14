@@ -1,3 +1,5 @@
+// src/screens/Login/LoginScreen.js
+
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
@@ -13,6 +15,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import LinearGradient from 'react-native-linear-gradient';
+import { Colors, Fonts } from '../../utils/Constants'; // ✅ Custom Colors & Fonts
 
 export default function LoginScreen({ navigation }) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -84,7 +87,7 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
-    <LinearGradient colors={['#9333EA', '#4C1D95']} style={styles.gradient}>
+    <LinearGradient colors={[Colors.primary, Colors.primary_light, Colors.secondary]} style={styles.gradient}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
         <Animated.View style={[styles.container, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
           <Text style={styles.title}>Flot</Text>
@@ -93,11 +96,11 @@ export default function LoginScreen({ navigation }) {
             <Text style={styles.label}>Enter Your Mobile</Text>
 
             <View style={styles.inputContainer}>
-              <Icon name="phone" size={20} color="#9333EA" style={styles.icon} />
+              <Icon name="phone" size={20} color={Colors.primary} style={styles.icon} />
               <TextInput
                 style={styles.input}
                 placeholder="8770764615"
-                placeholderTextColor="#aaa"
+                placeholderTextColor={Colors.disabled}
                 keyboardType="phone-pad"
                 maxLength={10}
                 value={phone}
@@ -126,7 +129,7 @@ export default function LoginScreen({ navigation }) {
               ]}
             >
               <LinearGradient
-                colors={['#6E00FF', '#B300E7']}
+                colors={[Colors.secondary, Colors.primary]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={styles.gradientButton}
@@ -153,7 +156,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 40,
     color: '#fff',
-    fontFamily: 'Okra-Bold',
+    fontFamily: Fonts.Bold,
     textAlign: 'center',
     marginBottom: 50,
   },
@@ -164,7 +167,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     marginBottom: 10,
-    fontFamily: 'Okra-Medium',
+    fontFamily: Fonts.Medium,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -180,14 +183,14 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    color: '#333',
-    fontFamily: 'Okra-Regular',
+    color: Colors.text,
+    fontFamily: Fonts.Regular,
   },
   note: {
     color: '#ddd',
     fontSize: 12,
-    marginBottom: 30,
-    fontFamily: 'Okra-Regular',
+    marginBottom: 20,
+    fontFamily: Fonts.Regular,
   },
   buttonWrapper: {
     alignItems: 'center',
@@ -196,7 +199,7 @@ const styles = StyleSheet.create({
     width: '90%',
     borderRadius: 50,
     elevation: 6,
-    shadowColor: '#B300E7',
+    shadowColor: Colors.primary,
     shadowOpacity: 0.3,
     shadowOffset: { width: 0, height: 8 },
     shadowRadius: 10,
@@ -210,7 +213,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 18,
-    fontFamily: 'Okra-Bold',
+    fontFamily: Fonts.Bold,
     letterSpacing: 1,
   },
 });

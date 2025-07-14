@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Colors, Fonts } from '../../utils/Constants';
 
 const DashboardScreen = ({ navigation }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -24,53 +25,45 @@ const DashboardScreen = ({ navigation }) => {
 
     Animated.loop(
       Animated.sequence([
-        Animated.timing(bellAnim, {
-          toValue: -6,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(bellAnim, {
-          toValue: 6,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(bellAnim, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }),
+        Animated.timing(bellAnim, { toValue: -6, duration: 300, useNativeDriver: true }),
+        Animated.timing(bellAnim, { toValue: 6, duration: 300, useNativeDriver: true }),
+        Animated.timing(bellAnim, { toValue: 0, duration: 300, useNativeDriver: true }),
         Animated.delay(1500),
       ])
     ).start();
   }, []);
 
   return (
-    <LinearGradient colors={['#9333EA', '#4C1D95']} style={styles.container}>
+    <LinearGradient colors={[Colors.primary, Colors.primary_light, Colors.secondary]} style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
+
         <Animated.View style={[styles.topCard, { opacity: fadeAnim }]}>
-          <View style={styles.profileSection}>
-            <Image
-              source={require('../../assets/Image/user.png')}
-              style={styles.profileImage}
-            />
-            <View>
-              <Text style={styles.name}>Gokul Kumari</Text>
-              <Text style={styles.greeting}>Good morning</Text>
+          <View style={styles.headerRow}>
+            <View style={styles.profileSection}>
+              <Image
+                source={require('../../assets/Image/user.png')}
+                style={styles.profileImage}
+              />
+              <View>
+                <Text style={styles.name}>Gokul Kumari</Text>
+                <Text style={styles.greeting}>Good morning</Text>
+              </View>
             </View>
+
+            <Animated.View style={[styles.bellIcon, { transform: [{ translateX: bellAnim }] }]}>
+              <Icon name="bell-outline" size={24} color="#fff" />
+            </Animated.View>
           </View>
 
-          <Animated.View style={[styles.bellIcon, { transform: [{ translateX: bellAnim }] }]}>
-            <Icon name="bell-outline" size={24} color="#fff" />
-          </Animated.View>
-
-          <View style={styles.infoRow}>
+          <View style={styles.loanInfoRow}>
             <View style={styles.infoBlock}>
               <Text style={styles.infoLabel}>Maximum Loan</Text>
-              <Text style={styles.infoValue}>100,000</Text>
+              <Text style={styles.infoValue}>₹100,000</Text>
             </View>
+            <View style={styles.divider} />
             <View style={styles.infoBlock}>
               <Text style={styles.infoLabel}>Maximum Tenure</Text>
-              <Text style={styles.infoValue}>Max 90 Day</Text>
+              <Text style={styles.infoValue}>90 Days</Text>
             </View>
           </View>
         </Animated.View>
@@ -78,18 +71,19 @@ const DashboardScreen = ({ navigation }) => {
         <View style={styles.whiteCard}>
           <Text style={styles.cardTitle}>Get Loan on Click</Text>
           <Text style={styles.cardSubtitle}>KYC | Basic Details | Disbursal</Text>
-          <Text style={styles.cardNote}>Minimum Document, Online Process</Text>
+          <Text style={styles.cardNote}>Minimum Documents, 100% Online Process</Text>
         </View>
 
         <TouchableOpacity
           activeOpacity={0.8}
           style={styles.applyButtonWrapper}
-          onPress={() => navigation.navigate('ApplyLoan')} // 👈 navigate to ApplyLoan screen
+          onPress={() => navigation.navigate('ApplyLoan')}
         >
-          <LinearGradient colors={['#6E00FF', '#B300E7']} style={styles.applyButton}>
+          <LinearGradient colors={[Colors.secondary, Colors.primary]} style={styles.applyButton}>
             <Text style={styles.applyText}>Apply Now</Text>
           </LinearGradient>
         </TouchableOpacity>
+
       </ScrollView>
     </LinearGradient>
   );
@@ -103,41 +97,48 @@ const styles = StyleSheet.create({
     paddingBottom: 60,
   },
   topCard: {
-    padding: 24,
-    paddingTop: 64,
+    paddingTop: 60,
+    paddingHorizontal: 24,
+    paddingBottom: 40,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 30,
   },
   profileSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
   },
   profileImage: {
     height: 48,
     width: 48,
     borderRadius: 24,
-    marginRight: 14,
+    marginRight: 12,
   },
   name: {
     color: '#fff',
     fontSize: 18,
-    fontFamily: 'Okra-Bold',
+    fontFamily: Fonts.Bold,
   },
   greeting: {
     color: '#ddd',
     fontSize: 13,
-    fontFamily: 'Okra-Regular',
+    fontFamily: Fonts.Regular,
   },
   bellIcon: {
-    position: 'absolute',
-    top: 65,
-    right: 20,
+    padding: 8,
   },
-  infoRow: {
+  loanInfoRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 30,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderRadius: 16,
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+    justifyContent: 'space-around',
   },
   infoBlock: {
     alignItems: 'center',
@@ -146,58 +147,65 @@ const styles = StyleSheet.create({
   infoLabel: {
     color: '#eee',
     fontSize: 14,
-    fontFamily: 'Okra-Regular',
+    fontFamily: Fonts.Regular,
     marginBottom: 6,
   },
   infoValue: {
     color: '#fff',
     fontSize: 22,
-    fontFamily: 'Okra-ExtraBold',
+    fontFamily: Fonts.Bold,
+  },
+  divider: {
+    width: 1,
+    backgroundColor: '#ddd',
+    marginHorizontal: 10,
+    opacity: 0.4,
   },
   whiteCard: {
+    marginTop: -20,
     marginHorizontal: 24,
-    marginTop: -16,
     backgroundColor: '#fff',
-    borderRadius: 16,
+    borderRadius: 20,
     padding: 24,
-    elevation: 6,
+    elevation: 5,
     shadowColor: '#000',
     shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 3 },
-    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
   },
   cardTitle: {
     fontSize: 20,
-    fontFamily: 'Okra-Bold',
-    color: '#111',
-    marginBottom: 6,
+    fontFamily: Fonts.Bold,
+    color: Colors.text,
+    marginBottom: 8,
   },
   cardSubtitle: {
     fontSize: 15,
-    fontFamily: 'Okra-Medium',
+    fontFamily: Fonts.Medium,
     color: '#444',
-    marginBottom: 6,
+    marginBottom: 4,
   },
   cardNote: {
     fontSize: 13,
-    fontFamily: 'Okra-Regular',
-    color: '#999',
+    fontFamily: Fonts.Regular,
+    color: Colors.disabled,
   },
   applyButtonWrapper: {
-    marginTop: 30,
+    marginTop: 32,
     marginHorizontal: 24,
-    borderRadius: 12,
+    borderRadius: 14,
     elevation: 4,
   },
   applyButton: {
     paddingVertical: 16,
-    borderRadius: 12,
+    borderRadius: 14,
     alignItems: 'center',
   },
   applyText: {
     color: '#fff',
     fontSize: 17,
-    fontFamily: 'Okra-Bold',
+    fontFamily: Fonts.Bold,
+    letterSpacing: 1,
   },
 });
 

@@ -10,10 +10,11 @@ import {
   Animated,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { Colors, Fonts } from '../../utils/Constants';
 
 const OtpScreen = ({ navigation, route }) => {
   const { phone } = route.params || {};
-  const [otp, setOtp] = useState(['1', '2', '3', '4']);
+  const [otp, setOtp] = useState(['', '', '', '']);
   const [timer, setTimer] = useState(59);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const inputs = useRef([]);
@@ -22,7 +23,6 @@ const OtpScreen = ({ navigation, route }) => {
     const interval = setInterval(() => {
       setTimer((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
-
     return () => clearInterval(interval);
   }, []);
 
@@ -40,18 +40,15 @@ const OtpScreen = ({ navigation, route }) => {
       newOtp[index] = text;
       setOtp(newOtp);
 
-      // Move to next input
       if (text && index < 3) {
-        inputs.current[index + 1].focus();
+        inputs.current[index + 1]?.focus();
       }
     }
   };
 
   const handleVerify = () => {
     if (otp.join('').length < 4) return;
-    // Add your verification logic here
-    
-    navigation.navigate('Home'); // Example
+    navigation.navigate('Home');
   };
 
   const handleResend = () => {
@@ -60,12 +57,13 @@ const OtpScreen = ({ navigation, route }) => {
   };
 
   return (
-    <LinearGradient colors={['#1e0066', '#000033']} style={styles.container}>
+    <LinearGradient colors={[Colors.primary, Colors.primary_light, Colors.secondary]} style={styles.container}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} style={{ flex: 1 }}>
         <Animated.View style={[styles.card, { opacity: fadeAnim }]}>
           <Text style={styles.title}>Verify Phone Number</Text>
           <Text style={styles.subText}>
-            A four-digit code has been sent to{'\n'}<Text style={styles.phone}>+91 {phone}</Text>
+            A four-digit code has been sent to{'\n'}
+            <Text style={styles.phone}>+91 {phone}</Text>
           </Text>
 
           <View style={styles.otpContainer}>
@@ -83,15 +81,23 @@ const OtpScreen = ({ navigation, route }) => {
           </View>
 
           <View style={styles.timerRow}>
-            <Text style={styles.resendText}>Resend OTP</Text>
-            <Text style={styles.timerText}>{timer < 10 ? `00:0${timer}` : `00:${timer}`}</Text>
+            <TouchableOpacity onPress={handleResend}>
+              <Text style={styles.resendText}>Resend OTP</Text>
+            </TouchableOpacity>
+            <Text style={styles.timerText}>
+              {timer < 10 ? `00:0${timer}` : `00:${timer}`}
+            </Text>
           </View>
 
           <Text style={styles.footerNote}>Your data is safe and secure with us</Text>
 
-          <TouchableOpacity activeOpacity={0.8} onPress={handleVerify} disabled={otp.includes('')}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={handleVerify}
+            disabled={otp.includes('')}
+          >
             <LinearGradient
-              colors={['#9333EA', '#4C1D95']}
+              colors={[Colors.secondary, Colors.primary]}
               style={styles.verifyButton}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
@@ -114,21 +120,21 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontFamily: 'Okra-Bold',
+    fontFamily: Fonts.Bold,
     color: '#fff',
     textAlign: 'center',
     marginBottom: 10,
   },
   subText: {
     fontSize: 14,
-    color: '#ccc',
+    color: Colors.backgroundSecondary,
     textAlign: 'center',
     marginBottom: 20,
-    fontFamily: 'Okra-Regular',
+    fontFamily: Fonts.Regular,
   },
   phone: {
     color: '#fff',
-    fontFamily: 'Okra-Medium',
+    fontFamily: Fonts.Medium,
   },
   otpContainer: {
     flexDirection: 'row',
@@ -141,12 +147,12 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 12,
     borderWidth: 1.5,
-    borderColor: '#9333EA',
+    borderColor: Colors.primary,
     backgroundColor: '#fff',
     textAlign: 'center',
     fontSize: 22,
-    fontFamily: 'Okra-Bold',
-    color: '#000',
+    fontFamily: Fonts.Bold,
+    color: Colors.text,
   },
   timerRow: {
     flexDirection: 'row',
@@ -156,18 +162,18 @@ const styles = StyleSheet.create({
   },
   resendText: {
     color: '#fff',
-    fontFamily: 'Okra-Medium',
+    fontFamily: Fonts.Medium,
   },
   timerText: {
-    color: 'orange',
-    fontFamily: 'Okra-Bold',
+    color: Colors.primary_light,
+    fontFamily: Fonts.Bold,
   },
   footerNote: {
     textAlign: 'center',
     fontSize: 12,
-    color: '#aaa',
+    color: Colors.backgroundSecondary,
     marginBottom: 25,
-    fontFamily: 'Okra-Regular',
+    fontFamily: Fonts.Regular,
   },
   verifyButton: {
     paddingVertical: 14,
@@ -175,7 +181,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 20,
     elevation: 6,
-    shadowColor: '#9333EA',
+    shadowColor: Colors.primary,
     shadowOpacity: 0.3,
     shadowOffset: { width: 0, height: 8 },
     shadowRadius: 10,
@@ -183,7 +189,7 @@ const styles = StyleSheet.create({
   verifyText: {
     color: '#fff',
     fontSize: 18,
-    fontFamily: 'Okra-Bold',
+    fontFamily: Fonts.Bold,
   },
 });
 

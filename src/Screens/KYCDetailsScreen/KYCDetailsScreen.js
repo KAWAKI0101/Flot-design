@@ -5,79 +5,62 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  Image,
   ScrollView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import dummyBasicDetails from '../../DummyData/DummyBasicDetails.js';
-
-const InputField = ({ label, value, onChangeText, placeholder }) => (
-  <View style={{ marginBottom: 16 }}>
-    <Text style={styles.label}>{label}</Text>
-    <TextInput
-      style={styles.input}
-      placeholder={placeholder || `Enter your ${label.toLowerCase()}`}
-      value={value}
-      placeholderTextColor={"#999"}
-      onChangeText={onChangeText}
-    />
-  </View>
-);
+import CheckBox from '@react-native-community/checkbox';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Colors } from '../../utils/Constants';
 
 const KYCDetailsScreen = ({ navigation }) => {
-  const [fullName, setFullName] = useState(dummyBasicDetails.fullName);
-  const [fatherName, setFatherName] = useState(dummyBasicDetails.fatherName);
-  const [gender, setGender] = useState(dummyBasicDetails.gender);
-  const [dob, setDob] = useState(dummyBasicDetails.dob);
-  const [email, setEmail] = useState(dummyBasicDetails.email);
+  const [panNumber, setPanNumber] = useState('');
+  const [accepted, setAccepted] = useState(false);
 
   const handleContinue = () => {
-    console.log('KYC Submitted:', {
-      fullName,
-      fatherName,
-      gender,
-      dob,
-      email,
-    });
-    navigation.navigate('Aadhaar');
+    if (!panNumber || !accepted) {
+      return alert('Please enter PAN and accept the Terms & Conditions.');
+    }
+    navigation.navigate('Aadhaar'); // Change as needed
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.heading}>Complete your KYC</Text>
-      <Text style={styles.subheading}>Your information is securely encrypted</Text>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
+        <Icon name="arrow-left" size={22} color={Colors.primary} />
+      </TouchableOpacity>
 
-      <InputField label="Full Name" value={fullName} onChangeText={setFullName} />
-      <InputField label="Father's Name" value={fatherName} onChangeText={setFatherName} />
+      <Text style={styles.title}>Complete your KYC</Text>
+      <Text style={styles.subtitle}>Your Data is Completely Secure with us</Text>
 
-      <Text style={styles.label}>Gender</Text>
-      <View style={styles.genderContainer}>
-        {['Male', 'Female', 'Other'].map((option) => (
-          <TouchableOpacity
-            key={option}
-            style={[
-              styles.genderOption,
-              gender === option && styles.genderSelected,
-            ]}
-            onPress={() => setGender(option)}
-          >
-            <Text
-              style={gender === option ? styles.genderSelectedText : styles.genderText}
-            >
-              {option}
-            </Text>
-          </TouchableOpacity>
-        ))}
+      <Image
+        source={require('../../assets/Image/Pan.png')} // your uploaded image path
+        style={styles.panImage}
+        resizeMode="contain"
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Enter PAN"
+        placeholderTextColor={Colors.disabled}
+        value={panNumber}
+        onChangeText={setPanNumber}
+        autoCapitalize="characters"
+      />
+
+      <View style={styles.checkboxWrapper}>
+        <CheckBox
+          value={accepted}
+          onValueChange={setAccepted}
+          tintColors={{ true: Colors.primary }}
+        />
+        <Text style={styles.checkboxText}>
+          I Accept the <Text style={styles.underline}>Term & Condition</Text>
+        </Text>
       </View>
 
-      <InputField label="Date of Birth" value={dob} onChangeText={setDob} placeholder="DD/MM/YYYY" />
-      <InputField label="Email" value={email} onChangeText={setEmail} />
-
-      <TouchableOpacity
-        style={styles.buttonWrapper}
-        onPress={handleContinue}
-        activeOpacity={0.9}
-      >
-        <LinearGradient colors={['#6B21A8', '#9333EA']} style={styles.button}>
+      <TouchableOpacity style={styles.buttonWrapper} onPress={handleContinue} activeOpacity={0.9}>
+        <LinearGradient colors={[Colors.primary, Colors.secondary]} style={styles.button}>
           <Text style={styles.buttonText}>Continue</Text>
         </LinearGradient>
       </TouchableOpacity>
@@ -93,64 +76,60 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     flexGrow: 1,
   },
-  heading: {
-    fontSize: 22,
+  backBtn: {
+    marginBottom: 16,
+  },
+  title: {
+    fontSize: 20,
     fontFamily: 'Okra-Bold',
-    color: '#1E1E1E',
+    color: Colors.text,
+    textAlign: 'center',
     marginBottom: 4,
   },
-  subheading: {
+  subtitle: {
     fontSize: 13,
-    color: '#888',
+    color: Colors.disabled,
+    textAlign: 'center',
     marginBottom: 24,
+    fontFamily: 'Okra-Regular',
   },
-  label: {
-    fontSize: 14,
-    fontFamily: 'Okra-Medium',
-    color: '#333',
-    marginBottom: 8,
+  panImage: {
+    width: '100%',
+    height: 150,
+    marginBottom: 24,
+    borderRadius: 10,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: Colors.border,
     borderRadius: 10,
     paddingVertical: 14,
     paddingHorizontal: 16,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: Colors.backgroundSecondary,
     fontFamily: 'Okra-Regular',
     fontSize: 15,
+    color: Colors.text,
+    marginBottom: 24,
   },
-  genderContainer: {
+  checkboxWrapper: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 16,
-  },
-  genderOption: {
-    flex: 1,
-    padding: 12,
-    marginHorizontal: 4,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    backgroundColor: '#FAFAFA',
     alignItems: 'center',
+    marginBottom: 24,
   },
-  genderSelected: {
-    backgroundColor: '#6B21A8',
-    borderColor: '#6B21A8',
-  },
-  genderText: {
-    color: '#333',
+  checkboxText: {
+    marginLeft: 8,
     fontFamily: 'Okra-Regular',
+    fontSize: 13,
+    color: Colors.text,
   },
-  genderSelectedText: {
-    color: '#fff',
+  underline: {
     fontFamily: 'Okra-Bold',
+    textDecorationLine: 'underline',
   },
   buttonWrapper: {
-    marginTop: 24,
     borderRadius: 12,
     overflow: 'hidden',
+    elevation: 3,
   },
   button: {
     paddingVertical: 16,

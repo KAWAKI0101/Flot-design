@@ -1,171 +1,139 @@
-// AadhaarOtpVerificationScreen.js
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
-  TouchableOpacity,
   TextInput,
-  Image
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import dummyAadhaarData from '../../DummyData/DummyOtpData.js';
+import { Colors } from '../../utils/Constants';
 
-const AadhaarOtpVerificationScreen = ({ navigation }) => {
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
-  const [timer, setTimer] = useState(60);
+const AadhaarVerificationScreen = ({ navigation }) => {
+  const [aadhaarNumber, setAadhaarNumber] = useState(dummyAadhaarData.aadhaarNumber);
 
-  useEffect(() => {
-    const countdown = setInterval(() => {
-      setTimer((prev) => {
-        if (prev <= 1) {
-          clearInterval(countdown);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(countdown);
-  }, []);
-
-  const handleOtpChange = (index, value) => {
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
-
-    // Auto move to next input
-    if (value && index < 5) {
-      const nextInput = `otp${index + 1}`;
-      refs[nextInput]?.focus();
-    }
-  };
-
-  const refs = {};
-
-  const handleSubmit = () => {
-    const enteredOtp = otp.join('');
-    console.log("Entered OTP:", enteredOtp);
-
-    if (enteredOtp.length === 6) {
-      // OTP logic here
-      if(enteredOtp === "123456")
-      navigation.navigate('Selfie'); // or 'SuccessKyc' screen
-    }
-     else {
-      alert('Please enter the 6-digit OTP');
-    }
+  const handleContinue = () => {
+    console.log('Aadhaar Verified:', aadhaarNumber);
+    navigation.navigate('AadhaarOTP');
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Complete your KYC</Text>
-      <Text style={styles.subtitle}>Your Data is Completely Secure with us</Text>
+    <LinearGradient
+      colors={[Colors.primary, Colors.primary_light, Colors.secondary]}
+      style={{ flex: 1 }}
+    >
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+        <View style={styles.progressWrapper}>
+          <View style={styles.progressDot} />
+          <View style={styles.progressDotActive} />
+          <View style={styles.progressDot} />
+        </View>
 
-      <Image
-        source={require('../../assets/Image/Verify-phone.png')} // Replace with your image path
-        style={styles.image}
-        resizeMode="contain"
-      />
+        <Text style={styles.heading}>Complete your KYC</Text>
+        <Text style={styles.subheading}>Your Data is Completely Secure with us</Text>
 
-      <Text style={styles.verifyTitle}>Verify Aadhaar OTP</Text>
-      <Text style={styles.info}>A six digit code has been sent to the</Text>
-      <Text style={styles.phone}>+91XXXXXX9997</Text>
+        <Image
+          source={require('../../assets/Image/Aadhar.png')}
+          style={styles.image}
+          resizeMode="contain"
+        />
 
-      <View style={styles.otpContainer}>
-        {otp.map((digit, idx) => (
-          <TextInput
-            key={idx}
-            style={styles.otpInput}
-            maxLength={1}
-            keyboardType="number-pad"
-            value={digit}
-            onChangeText={(val) => handleOtpChange(idx, val)}
-            ref={(ref) => (refs[`otp${idx}`] = ref)}
-          />
-        ))}
-      </View>
+        <Text style={styles.label}>Enter Aadhaar Number</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="0000 1111 2222"
+          keyboardType="numeric"
+          placeholderTextColor={Colors.disabled}
+          value={aadhaarNumber}
+          onChangeText={setAadhaarNumber}
+          maxLength={14}
+        />
 
-      <View style={styles.resendContainer}>
-        <Text style={styles.resend}>Resend OTP</Text>
-        <Text style={styles.timer}>00:{timer < 10 ? `0${timer}` : timer}</Text>
-      </View>
-
-      <TouchableOpacity onPress={handleSubmit} style={styles.buttonWrapper} activeOpacity={0.9}>
-        <LinearGradient colors={['#6B21A8', '#9333EA']} style={styles.button}>
-          <Text style={styles.buttonText}>Next</Text>
-        </LinearGradient>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity
+          style={styles.buttonWrapper}
+          onPress={handleContinue}
+          activeOpacity={0.9}
+        >
+          <LinearGradient
+            colors={[Colors.primary, Colors.primary_light]}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>Continue</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </ScrollView>
+    </LinearGradient>
   );
 };
 
-export default AadhaarOtpVerificationScreen;
+export default AadhaarVerificationScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     padding: 24,
-    backgroundColor: '#fff',
     alignItems: 'center',
+    backgroundColor: 'transparent', // allow gradient to show
   },
-  title: {
-    fontSize: 20,
+  progressWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 24,
+  },
+  progressDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: Colors.border,
+    marginHorizontal: 6,
+  },
+  progressDotActive: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: Colors.primary,
+    marginHorizontal: 6,
+  },
+  heading: {
+    fontSize: 22,
     fontFamily: 'Okra-Bold',
-    marginTop: 24,
-    color: '#000',
-  },
-  subtitle: {
-    fontSize: 13,
-    color: '#6B7280',
-    marginBottom: 20,
-  },
-  image: {
-    height: 160,
-    width: 160,
-    marginVertical: 16,
-  },
-  verifyTitle: {
-    fontSize: 17,
-    fontFamily: 'Okra-Bold',
+    color: Colors.text,
     marginBottom: 4,
   },
-  info: {
+  subheading: {
     fontSize: 13,
-    color: '#6B7280',
+    color: Colors.disabled,
+    marginBottom: 24,
+    fontFamily: 'Okra-Regular',
   },
-  phone: {
-    fontSize: 13,
-    fontFamily: 'Okra-Bold',
-    marginBottom: 20,
-    color: '#6B21A8',
+  image: {
+    width: '100%',
+    height: 220,
+    marginBottom: 24,
+    borderRadius: 10,
   },
-  otpContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 20,
+  label: {
+    alignSelf: 'flex-start',
+    fontSize: 14,
+    fontFamily: 'Okra-Medium',
+    color: Colors.text,
+    marginBottom: 8,
   },
-  otpInput: {
-    width: 40,
-    height: 48,
-    marginHorizontal: 4,
-    borderBottomWidth: 2,
-    borderColor: '#D1D5DB',
-    textAlign: 'center',
-    fontSize: 18,
-    color: '#000',
-  },
-  resendContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 20,
-  },
-  resend: {
-    color: '#6B7280',
-    marginRight: 8,
-  },
-  timer: {
-    color: 'red',
+  input: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 10,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    backgroundColor: Colors.backgroundSecondary,
+    fontFamily: 'Okra-Regular',
+    fontSize: 15,
+    color: Colors.text,
+    marginBottom: 24,
   },
   buttonWrapper: {
     width: '100%',
@@ -180,5 +148,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontFamily: 'Okra-Bold',
     fontSize: 16,
+    letterSpacing: 1,
   },
 });

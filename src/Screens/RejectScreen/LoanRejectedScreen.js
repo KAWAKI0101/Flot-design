@@ -11,22 +11,25 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const LoanRejectedScreen = ({ navigation }) => {
   return (
-    <LinearGradient colors={['#9333EA', '#3B0764']} style={styles.container}>
+    <LinearGradient colors={['#FFE1E1', '#FDDCDC']} style={styles.container}>
       {/* Back Button */}
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Icon name="arrow-left" size={22} color="#fff" />
+        <Icon name="arrow-left" size={22} color="#FF4D4F" />
       </TouchableOpacity>
 
       {/* Content */}
       <View style={styles.content}>
         <Image
-          source={require('../../assets/Image/Rejected.png')} // Place a red-cross/thumbs-down image in assets
+          source={require('../../assets/Image/Rejected.png')}
           style={styles.image}
         />
 
-        <Text style={styles.title}>Sorry! You are not eligible.</Text>
-        <Text style={styles.subtitle}>Your loan Application No : <Text style={styles.bold}>ZZYYYY</Text> is rejected</Text>
-        <Text style={styles.note}>Please try after 30 days</Text>
+        <Text style={styles.title}>Application Rejected</Text>
+        <Text style={styles.subtitle}>
+          Your loan application no.{' '}
+          <Text style={styles.bold}>ZZYYYY</Text> has been declined.
+        </Text>
+        <Text style={styles.note}>Please try again after 30 days.</Text>
       </View>
 
       {/* Button */}
@@ -34,8 +37,8 @@ const LoanRejectedScreen = ({ navigation }) => {
         style={styles.buttonWrapper}
         activeOpacity={0.9}
         onPress={() => navigation.navigate('Home')}>
-        <LinearGradient colors={['#fff', '#fff']} style={styles.button}>
-          <Text style={styles.buttonText}>Back to home</Text>
+        <LinearGradient colors={['#FF4D4F', '#FF6A6A']} style={styles.button}>
+          <Text style={styles.buttonText}>Back to Home</Text>
         </LinearGradient>
       </TouchableOpacity>
     </LinearGradient>
@@ -49,12 +52,17 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 24,
     justifyContent: 'space-between',
+    backgroundColor: '#FFE1E1',
   },
   backButton: {
     position: 'absolute',
-    top: 40,
+    top: 48,
     left: 24,
     zIndex: 10,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 8,
+    elevation: 4,
   },
   content: {
     flex: 1,
@@ -63,39 +71,40 @@ const styles = StyleSheet.create({
     paddingTop: 60,
   },
   image: {
-    width: 120,
-    height: 120,
+    width: 140,
+    height: 140,
     marginBottom: 32,
     resizeMode: 'contain',
   },
   title: {
-    fontSize: 18,
+    fontSize: 22,
     fontFamily: 'Okra-Bold',
-    color: '#fff',
+    color: '#FF4D4F',
     textAlign: 'center',
-    marginBottom: 10,
+    marginBottom: 8,
   },
   subtitle: {
     fontSize: 15,
     fontFamily: 'Okra-Regular',
-    color: '#f3f3f3',
+    color: '#555',
     textAlign: 'center',
+    marginHorizontal: 20,
   },
   bold: {
     fontFamily: 'Okra-Bold',
+    color: '#000',
   },
   note: {
     fontSize: 14,
-    color: '#ddd',
+    color: '#888',
     textAlign: 'center',
-    marginTop: 8,
+    marginTop: 10,
     fontFamily: 'Okra-Regular',
   },
   buttonWrapper: {
     marginBottom: 40,
     borderRadius: 12,
     overflow: 'hidden',
-    alignSelf: 'center',
     width: '100%',
   },
   button: {
@@ -105,7 +114,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    color: '#9333EA',
+    color: '#fff',
     fontFamily: 'Okra-Bold',
   },
 });

@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Platform,
-  ScrollView
+  ScrollView,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
@@ -14,6 +14,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import CheckBox from '@react-native-community/checkbox';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import dummyBasicDetails from '../../DummyData/DummyBasicDetails.js';
+import { Colors, Fonts } from '../../utils/Constants';
 
 const SubmitBasicDetailsScreen = ({ navigation }) => {
   const [dob, setDob] = useState(dummyBasicDetails.dob);
@@ -28,16 +29,6 @@ const SubmitBasicDetailsScreen = ({ navigation }) => {
   const handleContinue = () => {
     if (!accepted) return alert('Please accept the terms & conditions.');
 
-    console.log({
-      dob,
-      pincode,
-      city,
-      employmentType,
-      monthlyIncome,
-      incomeReceivedIn,
-      accepted,
-    });
-
     if (employmentType === 'self-employed') {
       navigation.navigate('Rejected');
     } else if (employmentType === 'salaried') {
@@ -50,15 +41,8 @@ const SubmitBasicDetailsScreen = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Icon name="arrow-left" size={22} color="#6B21A8" />
+        <Icon name="arrow-left" size={22} color={Colors.primary} />
       </TouchableOpacity>
-
-      <View style={styles.progressWrapper}>
-        <View style={styles.progressDotActive} />
-        <View style={styles.progressDot} />
-        <View style={styles.progressDot} />
-        <View style={styles.progressDot} />
-      </View>
 
       <Text style={styles.title}>Submit Basic Details</Text>
       <Text style={styles.subtitle}>Your data is completely secure with us</Text>
@@ -84,7 +68,7 @@ const SubmitBasicDetailsScreen = ({ navigation }) => {
       <TextInput
         style={styles.inputBox}
         placeholder="Enter your area pin code"
-        placeholderTextColor="#999"
+        placeholderTextColor={Colors.disabled}
         keyboardType="numeric"
         value={pincode}
         onChangeText={setPincode}
@@ -94,7 +78,7 @@ const SubmitBasicDetailsScreen = ({ navigation }) => {
       <TextInput
         style={styles.inputBox}
         placeholder="Enter your city"
-        placeholderTextColor="#999"
+        placeholderTextColor={Colors.disabled}
         value={city}
         onChangeText={setCity}
       />
@@ -104,10 +88,7 @@ const SubmitBasicDetailsScreen = ({ navigation }) => {
         <Picker
           selectedValue={employmentType}
           onValueChange={setEmploymentType}
-          style={{
-            color: employmentType ? '#000' : '#999',
-            fontFamily: 'Okra-Regular',
-          }}
+          style={{ color: Colors.text, fontFamily: Fonts.Regular }}
         >
           <Picker.Item label="Select employment type" value="" />
           <Picker.Item label="Salaried" value="salaried" />
@@ -119,7 +100,7 @@ const SubmitBasicDetailsScreen = ({ navigation }) => {
       <TextInput
         style={styles.inputBox}
         placeholder="Enter your income"
-        placeholderTextColor="#999"
+        placeholderTextColor={Colors.disabled}
         keyboardType="numeric"
         value={monthlyIncome}
         onChangeText={setMonthlyIncome}
@@ -130,10 +111,7 @@ const SubmitBasicDetailsScreen = ({ navigation }) => {
         <Picker
           selectedValue={incomeReceivedIn}
           onValueChange={setIncomeReceivedIn}
-          style={{
-            color: incomeReceivedIn ? '#000' : '#999',
-            fontFamily: 'Okra-Regular',
-          }}
+          style={{ color: Colors.text, fontFamily: Fonts.Regular }}
         >
           <Picker.Item label="Select mode" value="" />
           <Picker.Item label="Bank" value="bank" />
@@ -145,7 +123,7 @@ const SubmitBasicDetailsScreen = ({ navigation }) => {
         <CheckBox
           value={accepted}
           onValueChange={setAccepted}
-          tintColors={{ true: '#6B21A8' }}
+          tintColors={{ true: Colors.primary }}
         />
         <Text style={styles.checkboxText}>
           I Accept the <Text style={styles.underline}>Terms & Conditions</Text>
@@ -153,7 +131,7 @@ const SubmitBasicDetailsScreen = ({ navigation }) => {
       </View>
 
       <TouchableOpacity style={styles.buttonWrapper} onPress={handleContinue} activeOpacity={0.9}>
-        <LinearGradient colors={['#6B21A8', '#9333EA']} style={styles.button}>
+        <LinearGradient colors={[Colors.primary, Colors.primary_light]} style={styles.button}>
           <Text style={styles.buttonText}>Continue</Text>
         </LinearGradient>
       </TouchableOpacity>
@@ -165,8 +143,6 @@ const SubmitBasicDetailsScreen = ({ navigation }) => {
   );
 };
 
-export default SubmitBasicDetailsScreen;
-
 const styles = StyleSheet.create({
   container: {
     padding: 24,
@@ -176,66 +152,47 @@ const styles = StyleSheet.create({
   backButton: {
     marginBottom: 16,
   },
-  progressWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 24,
-  },
-  progressDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#ccc',
-    marginHorizontal: 4,
-  },
-  progressDotActive: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: '#9333EA',
-    marginHorizontal: 4,
-  },
   title: {
     fontSize: 20,
-    fontFamily: 'Okra-Bold',
-    color: '#1E1E1E',
+    fontFamily: Fonts.Bold,
+    color: Colors.text,
     textAlign: 'center',
     marginBottom: 4,
   },
   subtitle: {
     fontSize: 13,
-    color: '#888',
+    color: Colors.disabled,
     textAlign: 'center',
     marginBottom: 24,
+    fontFamily: Fonts.Regular,
   },
   label: {
     fontSize: 14,
-    fontFamily: 'Okra-Medium',
-    color: '#333',
+    fontFamily: Fonts.Medium,
+    color: Colors.text,
     marginBottom: 8,
     marginTop: 16,
   },
   inputBox: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: Colors.border,
     borderRadius: 10,
     paddingVertical: 14,
     paddingHorizontal: 16,
-    backgroundColor: '#FAFAFA',
-    fontFamily: 'Okra-Regular',
+    backgroundColor: Colors.backgroundSecondary,
+    fontFamily: Fonts.Regular,
     fontSize: 15,
   },
   inputText: {
-    color: '#333',
-    fontFamily: 'Okra-Regular',
+    color: Colors.text,
+    fontFamily: Fonts.Regular,
     fontSize: 15,
   },
   pickerBox: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: Colors.border,
     borderRadius: 10,
-    backgroundColor: '#FAFAFA',
-    marginBottom: 8,
+    backgroundColor: Colors.backgroundSecondary,
   },
   checkboxWrapper: {
     flexDirection: 'row',
@@ -244,12 +201,12 @@ const styles = StyleSheet.create({
   },
   checkboxText: {
     marginLeft: 8,
-    fontFamily: 'Okra-Regular',
+    fontFamily: Fonts.Regular,
     fontSize: 13,
-    color: '#222',
+    color: Colors.text,
   },
   underline: {
-    fontFamily: 'Okra-Bold',
+    fontFamily: Fonts.SemiBold,
     textDecorationLine: 'underline',
   },
   buttonWrapper: {
@@ -263,7 +220,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    fontFamily: 'Okra-Bold',
+    fontFamily: Fonts.Bold,
     fontSize: 16,
     letterSpacing: 1,
   },
@@ -272,9 +229,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   laterText: {
-    color: '#6B21A8',
+    color: Colors.primary,
     fontSize: 14,
-    fontFamily: 'Okra-Medium',
+    fontFamily: Fonts.Medium,
     textDecorationLine: 'underline',
   },
 });
+
+export default SubmitBasicDetailsScreen;
