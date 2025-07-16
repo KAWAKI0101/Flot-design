@@ -27,7 +27,7 @@ const SelfieUploadScreen = ({ navigation }) => {
 
   const handleSubmit = () => {
     console.log('Photo submitted:', photo);
-    navigation.navigate('ConformAddres');
+    navigation.navigate('AddressConformation');
   };
 
   return (

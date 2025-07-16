@@ -50,7 +50,7 @@ const ConfirmDetailsScreen = ({ navigation }) => {
     };
 
     return (
-        <LinearGradient colors={['#F0EBFA', '#E3D5F4']} style={styles.gradientContainer}>
+        <LinearGradient colors={['#F0EBFA', '#fcfaffff']} style={styles.gradientContainer}>
             <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
                 <Text style={styles.title}>Confirm Your Address</Text>
                 <Text style={styles.subtitle}>Your Data is Completely Secure with us</Text>

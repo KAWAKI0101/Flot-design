@@ -1,212 +1,267 @@
-import React, { useEffect, useRef } from 'react';
+// src/screens/DashboardScreen.js
+
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  Image,
-  TouchableOpacity,
-  Animated,
   ScrollView,
+  Dimensions,
+  TouchableOpacity,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Colors, Fonts } from '../../utils/Constants';
+import { statsData, benefitsData } from '../../DummyData/DashboardDummyData';
 
-const DashboardScreen = ({ navigation }) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const bellAnim = useRef(new Animated.Value(0)).current;
+const { width } = Dimensions.get('window');
 
-  useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 800,
-      useNativeDriver: true,
-    }).start();
-
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(bellAnim, { toValue: -6, duration: 300, useNativeDriver: true }),
-        Animated.timing(bellAnim, { toValue: 6, duration: 300, useNativeDriver: true }),
-        Animated.timing(bellAnim, { toValue: 0, duration: 300, useNativeDriver: true }),
-        Animated.delay(1500),
-      ])
-    ).start();
-  }, []);
-
+export default function DashboardScreen({ navigation }) {
   return (
-    <LinearGradient colors={[Colors.primary, Colors.primary_light, Colors.secondary]} style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-
-        <Animated.View style={[styles.topCard, { opacity: fadeAnim }]}>
-          <View style={styles.headerRow}>
-            <View style={styles.profileSection}>
-              <Image
-                source={require('../../assets/Image/user.png')}
-                style={styles.profileImage}
-              />
-              <View>
-                <Text style={styles.name}>Gokul Kumari</Text>
-                <Text style={styles.greeting}>Good morning</Text>
-              </View>
-            </View>
-
-            <Animated.View style={[styles.bellIcon, { transform: [{ translateX: bellAnim }] }]}>
-              <Icon name="bell-outline" size={24} color="#fff" />
-            </Animated.View>
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+      <LinearGradient
+        colors={[Colors.primary, Colors.primary_light, Colors.secondary]}
+        style={styles.headerContainer}
+      >
+        <View style={styles.topRow}>
+          <Icon name="account-circle" size={32} color="#fff" />
+          <View style={{ flex: 1, marginLeft: 10 }}>
+            <Text style={styles.username}>Gokul Kumari</Text>
+            <Text style={styles.greeting}>Good morning</Text>
           </View>
-
-          <View style={styles.loanInfoRow}>
-            <View style={styles.infoBlock}>
-              <Text style={styles.infoLabel}>Maximum Loan</Text>
-              <Text style={styles.infoValue}>₹100,000</Text>
-            </View>
-            <View style={styles.divider} />
-            <View style={styles.infoBlock}>
-              <Text style={styles.infoLabel}>Maximum Tenure</Text>
-              <Text style={styles.infoValue}>90 Days</Text>
-            </View>
-          </View>
-        </Animated.View>
-
-        <View style={styles.whiteCard}>
-          <Text style={styles.cardTitle}>Get Loan on Click</Text>
-          <Text style={styles.cardSubtitle}>KYC | Basic Details | Disbursal</Text>
-          <Text style={styles.cardNote}>Minimum Documents, 100% Online Process</Text>
+          <Icon name="bell-outline" size={24} color="#fff" />
         </View>
 
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={styles.applyButtonWrapper}
-          onPress={() => navigation.navigate('ApplyLoan')}
+        <LinearGradient
+          colors={['#ffffff33', '#ffffff11']}
+          style={styles.loanInfoCard}
         >
-          <LinearGradient colors={[Colors.secondary, Colors.primary]} style={styles.applyButton}>
-            <Text style={styles.applyText}>Apply Now</Text>
+          <View style={styles.loanBox}>
+            <Text style={styles.loanLabel}>Maximum Loan</Text>
+            <Text style={styles.loanValue}>₹100,000</Text>
+          </View>
+          <View style={styles.divider} />
+          <View style={styles.loanBox}>
+            <Text style={styles.loanLabel}>Maximum Tenure</Text>
+            <Text style={styles.loanValue}>90 Days</Text>
+          </View>
+        </LinearGradient>
+      </LinearGradient>
+
+      <ScrollView
+        contentContainerStyle={styles.contentWrapper}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* WHY CHOOSE US */}
+        <View style={styles.cardSection}>
+          <View style={styles.featureBox}>
+            <Icon name="clock-outline" size={24} color={Colors.primary} />
+            <Text style={styles.featureTitle}>Quick Approval</Text>
+            <Text style={styles.featureText}>Get approved in just 24 hours</Text>
+          </View>
+          <View style={styles.featureBox}>
+            <Icon name="shield-lock-outline" size={24} color={Colors.primary} />
+            <Text style={styles.featureTitle}>Secure Process</Text>
+            <Text style={styles.featureText}>Bank-level security & encryption</Text>
+          </View>
+        </View>
+
+        {/* STATS */}
+        <View style={styles.statsRow}>
+          {statsData.map((item, idx) => (
+            <View key={idx} style={styles.statItem}>
+              <Icon name={item.icon} size={22} color={Colors.primary} />
+              <Text style={styles.statLabel}>{item.label}</Text>
+              <Text style={styles.statSub}>{item.subLabel}</Text>
+            </View>
+          ))}
+        </View>
+
+        {/* BENEFITS */}
+        <View style={styles.benefitsCard}>
+          <Text style={styles.cardHeading}>Loan Benefits</Text>
+          {benefitsData.map((point, idx) => (
+            <View key={idx} style={styles.benefitItem}>
+              <Icon name="check-circle" size={18} color="green" />
+              <Text style={styles.benefitText}>{point}</Text>
+            </View>
+          ))}
+        </View>
+
+        {/* APPLY BUTTON */}
+        <TouchableOpacity
+          onPress={() => navigation.navigate('ApplyLoan')}
+          activeOpacity={0.8}
+        >
+          <LinearGradient
+            colors={[Colors.primary, Colors.primary_light, Colors.secondary]}
+            style={styles.applyButton}
+          >
+            <Text style={styles.applyButtonText}>Apply Now</Text>
+            <Text style={styles.applySubText}>Get instant approval</Text>
           </LinearGradient>
         </TouchableOpacity>
 
+        <Text style={styles.footerNote}>
+          By proceeding, you agree to our Terms & Conditions and Privacy Policy
+        </Text>
       </ScrollView>
-    </LinearGradient>
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollContainer: {
-    paddingBottom: 60,
-  },
-  topCard: {
-    paddingTop: 60,
+  headerContainer: {
     paddingHorizontal: 24,
+    paddingTop: 60,
     paddingBottom: 40,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
   },
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  profileSection: {
+  topRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 24,
   },
-  profileImage: {
-    height: 48,
-    width: 48,
-    borderRadius: 24,
-    marginRight: 12,
-  },
-  name: {
-    color: '#fff',
+  username: {
     fontSize: 18,
     fontFamily: Fonts.Bold,
+    color: '#fff',
   },
   greeting: {
-    color: '#ddd',
     fontSize: 13,
     fontFamily: Fonts.Regular,
+    color: '#f5f5f5',
   },
-  bellIcon: {
-    padding: 8,
-  },
-  loanInfoRow: {
+  loanInfoCard: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    borderRadius: 16,
-    paddingVertical: 20,
-    paddingHorizontal: 10,
     justifyContent: 'space-around',
+    backgroundColor: '#ffffff22',
+    paddingVertical: 16,
+    borderRadius: 16,
   },
-  infoBlock: {
+  loanBox: {
     alignItems: 'center',
     flex: 1,
   },
-  infoLabel: {
-    color: '#eee',
+  loanLabel: {
     fontSize: 14,
     fontFamily: Fonts.Regular,
-    marginBottom: 6,
+    color: '#f0f0f0',
   },
-  infoValue: {
-    color: '#fff',
-    fontSize: 22,
+  loanValue: {
+    fontSize: 20,
     fontFamily: Fonts.Bold,
+    color: '#fff',
+    marginTop: 6,
   },
   divider: {
     width: 1,
-    backgroundColor: '#ddd',
-    marginHorizontal: 10,
-    opacity: 0.4,
+    backgroundColor: '#ffffff66',
+    marginHorizontal: 12,
   },
-  whiteCard: {
-    marginTop: -20,
-    marginHorizontal: 24,
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    padding: 24,
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
+  contentWrapper: {
+    paddingHorizontal: 20,
+    paddingBottom: 80,
   },
-  cardTitle: {
-    fontSize: 20,
-    fontFamily: Fonts.Bold,
-    color: Colors.text,
-    marginBottom: 8,
+  cardSection: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 24,
+    marginBottom: 16,
   },
-  cardSubtitle: {
-    fontSize: 15,
-    fontFamily: Fonts.Medium,
-    color: '#444',
-    marginBottom: 4,
-  },
-  cardNote: {
-    fontSize: 13,
-    fontFamily: Fonts.Regular,
-    color: Colors.disabled,
-  },
-  applyButtonWrapper: {
-    marginTop: 32,
-    marginHorizontal: 24,
-    borderRadius: 14,
-    elevation: 4,
-  },
-  applyButton: {
-    paddingVertical: 16,
-    borderRadius: 14,
+  featureBox: {
+    width: (width - 60) / 2,
+    backgroundColor: '#f1f5fd',
+    padding: 14,
+    borderRadius: 16,
     alignItems: 'center',
   },
-  applyText: {
-    color: '#fff',
-    fontSize: 17,
+  featureTitle: {
     fontFamily: Fonts.Bold,
-    letterSpacing: 1,
+    fontSize: 14,
+    marginTop: 6,
+    color: Colors.text,
+  },
+  featureText: {
+    textAlign: 'center',
+    fontSize: 12,
+    color: Colors.disabled,
+    fontFamily: Fonts.Regular,
+    marginTop: 4,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // marginVertical: 20,
+    marginTop: 0, // move up
+    marginBottom: 20, // keep bottom space
+  },
+  statItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  statLabel: {
+    fontFamily: Fonts.Bold,
+    fontSize: 16,
+    color: Colors.text,
+  },
+  statSub: {
+    fontSize: 12,
+    color: Colors.disabled,
+    fontFamily: Fonts.Regular,
+    textAlign: 'center',
+  },
+  benefitsCard: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 20,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 1 },
+    shadowRadius: 6,
+    marginBottom: 20,
+  },
+  cardHeading: {
+    fontSize: 18,
+    fontFamily: Fonts.Bold,
+    color: Colors.text,
+    marginBottom: 14,
+  },
+  benefitItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 4,
+  },
+  benefitText: {
+    marginLeft: 8,
+    fontSize: 14,
+    fontFamily: Fonts.Regular,
+    color: Colors.text,
+  },
+  applyButton: {
+    paddingVertical: 14,
+    borderRadius: 14,
+    alignItems: 'center',
+    elevation: 3,
+    marginBottom: 16,
+  },
+  applyButtonText: {
+    fontSize: 16,
+    fontFamily: Fonts.Bold,
+    color: '#fff',
+  },
+  applySubText: {
+    fontSize: 12,
+    color: '#f0f0f0',
+    marginTop: 2,
+  },
+  footerNote: {
+    textAlign: 'center',
+    fontSize: 12,
+    color: Colors.disabled,
+    paddingHorizontal: 30,
+    marginTop: 4,
   },
 });
-
-export default DashboardScreen;

@@ -10,10 +10,13 @@ import {
   Animated,
   KeyboardAvoidingView,
   Platform,
+  StyleSheet as RNStyleSheet,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { BlurView } from '@react-native-community/blur';
 import { Colors } from '../../utils/Constants';
 import dummyAadhaarData from '../../DummyData/DummyOtpData';
+import { useFocusEffect } from '@react-navigation/native';
 
 const AadhaarVerificationScreen = ({ navigation }) => {
   const [aadhaarNumber, setAadhaarNumber] = useState(dummyAadhaarData.aadhaarNumber);
@@ -22,28 +25,53 @@ const AadhaarVerificationScreen = ({ navigation }) => {
   const [timer, setTimer] = useState(59);
 
   const otpAnim = useRef(new Animated.Value(0)).current;
+  const overlayAnim = useRef(new Animated.Value(0)).current;
   const inputRefs = useRef([]);
+  const timerRef = useRef(null);
 
   const handleContinue = () => {
-    Animated.timing(otpAnim, {
-      toValue: 1,
-      duration: 500,
-      useNativeDriver: true,
-    }).start(() => {
+    Animated.parallel([
+      Animated.timing(overlayAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(otpAnim, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
       setShowOtp(true);
       setTimer(59);
     });
   };
 
   useEffect(() => {
-    let interval;
     if (showOtp && timer > 0) {
-      interval = setInterval(() => {
+      timerRef.current = setInterval(() => {
         setTimer((prev) => prev - 1);
       }, 1000);
     }
-    return () => clearInterval(interval);
+
+    return () => {
+      clearInterval(timerRef.current);
+    };
   }, [showOtp, timer]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        // Reset everything when user navigates away
+        otpAnim.setValue(0);
+        overlayAnim.setValue(0);
+        setShowOtp(false);
+        setTimer(59);
+        setOtp(['', '', '', '', '', '']);
+        clearInterval(timerRef.current);
+      };
+    }, [])
+  );
 
   const handleOtpChange = (text, index) => {
     const newOtp = [...otp];
@@ -57,7 +85,6 @@ const AadhaarVerificationScreen = ({ navigation }) => {
   const handleOtpSubmit = () => {
     const fullOtp = otp.join('');
     if (fullOtp.length === 6) {
-      // For now, we just navigate without checking actual OTP
       navigation.navigate('Selfie');
     } else {
       alert('Please enter a valid 6-digit OTP');
@@ -100,38 +127,49 @@ const AadhaarVerificationScreen = ({ navigation }) => {
       </ScrollView>
 
       {showOtp && (
-        <Animated.View style={[styles.otpModal, { transform: [{ translateY }] }]}>
-          <Text style={styles.otpTitle}>Verify Aadhaar OTP</Text>
-          <Text style={styles.otpInfo}>A six digit code has been sent to the +91XXXXXX9997</Text>
-          <Text style={styles.otpSub}>Kindly enter the code to continue.</Text>
+        <>
+          <Animated.View style={[styles.blurOverlay, { opacity: overlayAnim }]}>
+            <BlurView
+              style={RNStyleSheet.absoluteFill}
+              blurType="light"
+              blurAmount={8}
+              reducedTransparencyFallbackColor="white"
+            />
+          </Animated.View>
 
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.otpBoxes}
-          >
-            {otp.map((value, index) => (
-              <TextInput
-                key={index}
-                ref={(ref) => (inputRefs.current[index] = ref)}
-                style={styles.otpBox}
-                keyboardType="numeric"
-                maxLength={1}
-                onChangeText={(text) => handleOtpChange(text, index)}
-                value={value}
-              />
-            ))}
-          </KeyboardAvoidingView>
+          <Animated.View style={[styles.otpModal, { transform: [{ translateY }] }]}>
+            <Text style={styles.otpTitle}>Verify Aadhaar OTP</Text>
+            <Text style={styles.otpInfo}>A six digit code has been sent to the +91XXXXXX9997</Text>
+            <Text style={styles.otpSub}>Kindly enter the code to continue.</Text>
 
-          <Text style={styles.resend}>
-            Resend OTP <Text style={{ color: 'red' }}>{`00:${timer < 10 ? '0' : ''}${timer}`}</Text>
-          </Text>
+            <KeyboardAvoidingView
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              style={styles.otpBoxes}
+            >
+              {otp.map((value, index) => (
+                <TextInput
+                  key={index}
+                  ref={(ref) => (inputRefs.current[index] = ref)}
+                  style={styles.otpBox}
+                  keyboardType="numeric"
+                  maxLength={1}
+                  onChangeText={(text) => handleOtpChange(text, index)}
+                  value={value}
+                />
+              ))}
+            </KeyboardAvoidingView>
 
-          <TouchableOpacity style={styles.buttonWrapper} onPress={handleOtpSubmit}>
-            <LinearGradient colors={[Colors.primary, Colors.primary_light]} style={styles.button}>
-              <Text style={styles.buttonText}>Next</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </Animated.View>
+            <Text style={styles.resend}>
+              Resend OTP <Text style={{ color: 'red' }}>{`00:${timer < 10 ? '0' : ''}${timer}`}</Text>
+            </Text>
+
+            <TouchableOpacity style={styles.buttonWrapper} onPress={handleOtpSubmit}>
+              <LinearGradient colors={[Colors.primary, Colors.primary_light]} style={styles.button}>
+                <Text style={styles.buttonText}>Next</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </Animated.View>
+        </>
       )}
     </View>
   );
@@ -199,6 +237,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     letterSpacing: 1,
   },
+  blurOverlay: {
+    ...RNStyleSheet.absoluteFillObject,
+    zIndex: 1,
+  },
   otpModal: {
     position: 'absolute',
     bottom: 0,
@@ -212,6 +254,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 10,
     elevation: 10,
+    zIndex: 2,
   },
   otpTitle: {
     fontSize: 18,

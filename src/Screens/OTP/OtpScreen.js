@@ -15,6 +15,7 @@ import { Colors, Fonts } from '../../utils/Constants';
 const OtpScreen = ({ navigation, route }) => {
   const { phone } = route.params || {};
   const [otp, setOtp] = useState(['', '', '', '']);
+  const [invalidFields, setInvalidFields] = useState([false, false, false, false]);
   const [timer, setTimer] = useState(59);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const inputs = useRef([]);
@@ -40,6 +41,11 @@ const OtpScreen = ({ navigation, route }) => {
       newOtp[index] = text;
       setOtp(newOtp);
 
+      // Clear red border for this field
+      const updatedInvalids = [...invalidFields];
+      updatedInvalids[index] = false;
+      setInvalidFields(updatedInvalids);
+
       if (text && index < 3) {
         inputs.current[index + 1]?.focus();
       }
@@ -47,12 +53,18 @@ const OtpScreen = ({ navigation, route }) => {
   };
 
   const handleVerify = () => {
-    if (otp.join('').length < 4) return;
+    const newInvalids = otp.map((val) => val === '');
+    setInvalidFields(newInvalids);
+
+    if (newInvalids.includes(true)) return;
+
+    // All fields filled correctly
     navigation.navigate('Home');
   };
 
   const handleResend = () => {
     setOtp(['', '', '', '']);
+    setInvalidFields([false, false, false, false]);
     setTimer(59);
   };
 
@@ -71,7 +83,10 @@ const OtpScreen = ({ navigation, route }) => {
               <TextInput
                 key={index}
                 ref={(ref) => (inputs.current[index] = ref)}
-                style={styles.otpInput}
+                style={[
+                  styles.otpInput,
+                  invalidFields[index] && { borderColor: 'red' }
+                ]}
                 keyboardType="number-pad"
                 maxLength={1}
                 value={digit}
@@ -94,7 +109,6 @@ const OtpScreen = ({ navigation, route }) => {
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={handleVerify}
-            disabled={otp.includes('')}
           >
             <LinearGradient
               colors={[Colors.secondary, Colors.primary]}
