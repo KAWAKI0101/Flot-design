@@ -8,6 +8,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  SafeAreaView,
+  StatusBar,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -30,62 +32,64 @@ const ApplyLoanScreen = ({ navigation }) => {
   };
 
   return (
-    <LinearGradient colors={[Colors.primary, Colors.primary_light, Colors.secondary]} style={styles.gradient}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={{ flex: 1 }}
-      >
-        <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
-          <View style={styles.container}>
-            {/* Header */}
-            <View style={styles.header}>
-              <TouchableOpacity onPress={() => navigation.goBack()}>
-                <Icon name="arrow-left" size={22} color="#fff" />
-              </TouchableOpacity>
-              <Text style={styles.headerTitle}>Apply for a Loan</Text>
-            </View>
-
-            {/* Card */}
-            <View style={styles.card}>
-              <Text style={styles.label}>How much do you want to borrow?</Text>
-              <View style={[styles.inputWrapper, amountError && styles.errorBorder]}>
-                <Text style={styles.currency}>₹</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="20,000"
-                  placeholderTextColor="#aaa"
-                  keyboardType="numeric"
-                  value={amount}
-                  onChangeText={(text) => {
-                    setAmount(text);
-                    if (text.trim() !== '') setAmountError(false);
-                  }}
-                />
+    <LinearGradient colors={[Colors.backgroundSecondary, Colors.backgroundSecondary]} style={styles.gradient}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={{ flex: 1 }}
+        >
+          <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
+            <View style={styles.container}>
+              {/* Header */}
+              <View style={styles.header}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                  <Icon name="arrow-left" size={22} color="#000000" />
+                </TouchableOpacity>
+                <Text style={styles.headerTitle}>Apply for a Loan</Text>
               </View>
 
-              <Text style={styles.label}>Why do you need the loan?</Text>
-              <TextInput
-                style={[styles.fullInput, styles.multilineInput, reasonError && styles.errorBorder]}
-                placeholder="e.g. Business, Education"
-                placeholderTextColor="#aaa"
-                value={reason}
-                onChangeText={(text) => {
-                  setReason(text);
-                  if (text.trim() !== '') setReasonError(false);
-                }}
-                multiline
-              />
+              {/* Card */}
+              <View style={styles.card}>
+                <Text style={styles.label}>How much do you want to borrow?</Text>
+                <View style={[styles.inputWrapper, amountError && styles.errorBorder]}>
+                  <Text style={styles.currency}>₹</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="20,000"
+                    placeholderTextColor="#aaa"
+                    keyboardType="numeric"
+                    value={amount}
+                    onChangeText={(text) => {
+                      setAmount(text);
+                      if (text.trim() !== '') setAmountError(false);
+                    }}
+                  />
+                </View>
 
-              {/* Button */}
-              <TouchableOpacity style={styles.buttonWrapper} onPress={handleContinue} activeOpacity={0.9}>
-                <LinearGradient colors={[Colors.primary, Colors.primary_light]} style={styles.button}>
-                  <Text style={styles.buttonText}>Continue</Text>
-                </LinearGradient>
-              </TouchableOpacity>
+                <Text style={styles.label}>Why do you need the loan?</Text>
+                <TextInput
+                  style={[styles.fullInput, styles.multilineInput, reasonError && styles.errorBorder]}
+                  placeholder="e.g. Business, Education"
+                  placeholderTextColor="#aaa"
+                  value={reason}
+                  onChangeText={(text) => {
+                    setReason(text);
+                    if (text.trim() !== '') setReasonError(false);
+                  }}
+                  multiline
+                />
+
+                {/* Button */}
+                <TouchableOpacity style={styles.buttonWrapper} onPress={handleContinue} activeOpacity={0.9}>
+                  <LinearGradient colors={[Colors.primary, Colors.primary_light]} style={styles.button}>
+                    <Text style={styles.buttonText}>Continue</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
     </LinearGradient>
   );
 };
@@ -106,13 +110,17 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
     marginBottom: 24,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 10 : 50, // ✅ Pushes header down from notch
+    gap: 12,
+  },
+  backIcon: {
+    paddingRight: 12,
   },
   headerTitle: {
     fontSize: 20,
     fontFamily: 'Okra-Bold',
-    color: '#fff',
+    color: '#000000',
   },
   card: {
     backgroundColor: 'rgba(255, 255, 255, 0.95)',

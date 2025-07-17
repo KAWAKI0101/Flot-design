@@ -17,11 +17,12 @@ import { BlurView } from '@react-native-community/blur';
 import { Colors } from '../../utils/Constants';
 import dummyAadhaarData from '../../DummyData/DummyOtpData';
 import { useFocusEffect } from '@react-navigation/native';
+import AppHeader from '../../components/AppHeader'; // ✅ Reusable header
 
 const AadhaarVerificationScreen = ({ navigation }) => {
   const [aadhaarNumber, setAadhaarNumber] = useState(dummyAadhaarData.aadhaarNumber);
   const [showOtp, setShowOtp] = useState(false);
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const [otp, setOtp] = useState(['', '', '', '']); // ✅ 4-digit OTP
   const [timer, setTimer] = useState(59);
 
   const otpAnim = useRef(new Animated.Value(0)).current;
@@ -54,20 +55,17 @@ const AadhaarVerificationScreen = ({ navigation }) => {
       }, 1000);
     }
 
-    return () => {
-      clearInterval(timerRef.current);
-    };
+    return () => clearInterval(timerRef.current);
   }, [showOtp, timer]);
 
   useFocusEffect(
     React.useCallback(() => {
       return () => {
-        // Reset everything when user navigates away
         otpAnim.setValue(0);
         overlayAnim.setValue(0);
         setShowOtp(false);
         setTimer(59);
-        setOtp(['', '', '', '', '', '']);
+        setOtp(['', '', '', '']);
         clearInterval(timerRef.current);
       };
     }, [])
@@ -77,17 +75,17 @@ const AadhaarVerificationScreen = ({ navigation }) => {
     const newOtp = [...otp];
     newOtp[index] = text;
     setOtp(newOtp);
-    if (text && index < 5) {
+    if (text && index < otp.length - 1) {
       inputRefs.current[index + 1]?.focus();
     }
   };
 
   const handleOtpSubmit = () => {
     const fullOtp = otp.join('');
-    if (fullOtp.length === 6) {
+    if (fullOtp.length === 4) {
       navigation.navigate('Selfie');
     } else {
-      alert('Please enter a valid 6-digit OTP');
+      alert('Please enter a valid 4-digit OTP');
     }
   };
 
@@ -99,8 +97,12 @@ const AadhaarVerificationScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        <Text style={styles.heading}>Complete your KYC</Text>
-        <Text style={styles.subheading}>Your Data is Completely Secure with us</Text>
+        {/* ✅ Reusable Header */}
+        <AppHeader
+          title="Complete your KYC"
+          subtitle="Your Data is Completely Secure with us"
+          onBackPress={() => navigation.goBack()}
+        />
 
         <Image
           source={require('../../assets/Image/Aadhar.png')}
@@ -139,7 +141,7 @@ const AadhaarVerificationScreen = ({ navigation }) => {
 
           <Animated.View style={[styles.otpModal, { transform: [{ translateY }] }]}>
             <Text style={styles.otpTitle}>Verify Aadhaar OTP</Text>
-            <Text style={styles.otpInfo}>A six digit code has been sent to the +91XXXXXX9997</Text>
+            <Text style={styles.otpInfo}>A 4-digit code has been sent to the +91XXXXXX9997</Text>
             <Text style={styles.otpSub}>Kindly enter the code to continue.</Text>
 
             <KeyboardAvoidingView
@@ -183,18 +185,6 @@ const styles = StyleSheet.create({
     padding: 24,
     alignItems: 'center',
     backgroundColor: '#fff',
-  },
-  heading: {
-    fontSize: 22,
-    fontFamily: 'Okra-Bold',
-    color: Colors.text,
-    marginBottom: 4,
-  },
-  subheading: {
-    fontSize: 13,
-    color: Colors.disabled,
-    marginBottom: 24,
-    fontFamily: 'Okra-Regular',
   },
   image: {
     width: '100%',
@@ -278,14 +268,14 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   otpBox: {
-    width: 40,
+    width: 50,
     height: 50,
     borderWidth: 1,
     borderRadius: 8,
     borderColor: Colors.border,
     backgroundColor: Colors.backgroundSecondary,
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: 20,
     fontFamily: 'Okra-Bold',
     color: Colors.text,
   },

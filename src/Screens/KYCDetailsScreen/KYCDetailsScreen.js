@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import CheckBox from '@react-native-community/checkbox';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Colors } from '../../utils/Constants';
+import AppHeader from '../../components/AppHeader'; // ✅ import the shared header
 
 const KYCDetailsScreen = ({ navigation }) => {
   const [panNumber, setPanNumber] = useState('');
@@ -21,20 +21,20 @@ const KYCDetailsScreen = ({ navigation }) => {
     if (!panNumber || !accepted) {
       return alert('Please enter PAN and accept the Terms & Conditions.');
     }
-    navigation.navigate('Aadhaar'); // Change as needed
+    navigation.navigate('Aadhaar');
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-        <Icon name="arrow-left" size={22} color={Colors.primary} />
-      </TouchableOpacity>
-
-      <Text style={styles.title}>Complete your KYC</Text>
-      <Text style={styles.subtitle}>Your Data is Completely Secure with us</Text>
+      {/* ✅ Reusable AppHeader */}
+      <AppHeader
+        title="Complete your KYC"
+        subtitle="Your Data is Completely Secure with us"
+        onBackPress={() => navigation.goBack()}
+      />
 
       <Image
-        source={require('../../assets/Image/Pan.png')} // your uploaded image path
+        source={require('../../assets/Image/Pan.png')}
         style={styles.panImage}
         resizeMode="contain"
       />
@@ -75,23 +75,6 @@ const styles = StyleSheet.create({
     padding: 24,
     backgroundColor: '#fff',
     flexGrow: 1,
-  },
-  backBtn: {
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 20,
-    fontFamily: 'Okra-Bold',
-    color: Colors.text,
-    textAlign: 'center',
-    marginBottom: 4,
-  },
-  subtitle: {
-    fontSize: 13,
-    color: Colors.disabled,
-    textAlign: 'center',
-    marginBottom: 24,
-    fontFamily: 'Okra-Regular',
   },
   panImage: {
     width: '100%',

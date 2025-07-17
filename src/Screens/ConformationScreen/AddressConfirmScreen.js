@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AppHeader from '../../components/AppHeader'; // Adjust the path if needed
 import { Colors, Fonts } from '../../utils/Constants';
 
 const AddressConfirmationScreen = ({ navigation }) => {
@@ -24,15 +24,14 @@ const AddressConfirmationScreen = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-      {/* Back Button */}
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Icon name="arrow-left" size={22} color={Colors.text} />
-      </TouchableOpacity>
+      {/* Reusable Header */}
+      <AppHeader
+        title="Address Confirmation"
+        subtitle="Your Data is Completely Secure with us"
+        onBackPress={() => navigation.goBack()}
+      />
 
-      {/* Title Section */}
-      <Text style={styles.title}>Address Confirmation</Text>
-      <Text style={styles.subtitle}>Your Data is Completely Secure with us</Text>
-
+      {/* Info Box */}
       <TouchableOpacity style={styles.infoBox}>
         <Text style={styles.infoText}>Is this your Current Address</Text>
       </TouchableOpacity>
@@ -63,7 +62,7 @@ const AddressConfirmationScreen = ({ navigation }) => {
       {/* Address Inputs */}
       <TextInput
         style={styles.input}
-        placeholder="Hour No"
+        placeholder="House No"
         placeholderTextColor="#999"
         value={houseNo}
         onChangeText={setHouseNo}
@@ -107,22 +106,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 24,
     backgroundColor: '#fff',
-  },
-  backButton: {
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 20,
-    fontFamily: Fonts.SemiBold,
-    textAlign: 'center',
-    color: Colors.text,
-  },
-  subtitle: {
-    fontSize: 13,
-    fontFamily: Fonts.Regular,
-    textAlign: 'center',
-    color: '#999',
-    marginBottom: 20,
   },
   infoBox: {
     borderWidth: 1,

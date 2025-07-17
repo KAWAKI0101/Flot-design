@@ -36,14 +36,13 @@ export default function IntroScreen({ navigation }) {
         <Text style={styles.labelRight}>Quick Loan{'\n'}Disbursal</Text>
       </View>
 
-      {/* White bottom card section */}
+      
       <View style={styles.bottomCard}>
-        {/* Dots */}
-        <View style={styles.dotsContainer}>
+        {/* <View style={styles.dotsContainer}>
           <View style={styles.dotInactive} />
           <View style={styles.dotActive} />
           <View style={styles.dotInactive} />
-        </View>
+        </View> */}
 
         {/* Text */}
         <Text style={styles.description}>
@@ -123,7 +122,7 @@ labelRight: {
 },
 
   bottomCard: {
-    marginTop: 150,
+    marginTop: 162,
     backgroundColor: '#fff',
     borderTopLeftRadius: 36,
     borderTopRightRadius: 36,

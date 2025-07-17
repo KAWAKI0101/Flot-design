@@ -9,8 +9,7 @@ import {
 import SplashScreen from '../Screens/Splash/SplashScreen';
 import IntroScreen from '../Screens/Intro/IntroScreen';
 import LoginScreen from '../Screens/Login/LoginScreen';
-import OtpScreen from '../Screens/OTP/OtpScreen';
-import DashboardScreen from '../Screens/Dashboard/DashboardScreen';
+// import OtpScreen from '../Screens/OTP/OtpScreen';
 import ApplyLoanScreen from '../Screens/ApplyScreen/ApplyLoanScreen';
 import SubmitBasicDetailsScreen from '../Screens/ProfeDetails/SubmitBasicDetailsScreen';
 import LoanRejectedScreen from '../Screens/RejectScreen/LoanRejectedScreen';
@@ -20,6 +19,7 @@ import AadhaarVerificationScreen from '../Screens/AadhaarVerification/AadhaarVer
 import SelfieUploadScreen from '../Screens/SelfyScreen/SelfieUploadScreen';
 import ConfirmAddressScreen from '../Screens/ConformationScreen/ConfirmAddressScreen';
 import AddressConfirmScreen from '../Screens/ConformationScreen/AddressConfirmScreen';
+import BottomTabNavigator from './BottomTabNavigation'; // 👈 Correct path here
 
 const Stack = createStackNavigator();
 
@@ -40,8 +40,11 @@ export default function AppNavigator() {
       <Stack.Screen name="Splash" component={SplashScreen} />
       <Stack.Screen name="Intro" component={IntroScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="OTP" component={OtpScreen} />
-      <Stack.Screen name="Home" component={DashboardScreen} />
+      {/* <Stack.Screen name="OTP" component={OtpScreen} /> */}
+      
+      
+      <Stack.Screen name="MainTab" component={BottomTabNavigator} />
+      
       <Stack.Screen name="ApplyLoan" component={ApplyLoanScreen} />
       <Stack.Screen name="SubmitBasicDetails" component={SubmitBasicDetailsScreen} />
       <Stack.Screen name="Rejected" component={LoanRejectedScreen} />
@@ -54,4 +57,3 @@ export default function AppNavigator() {
     </Stack.Navigator>
   );
 }
-

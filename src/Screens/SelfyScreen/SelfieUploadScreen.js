@@ -13,6 +13,7 @@ import { launchCamera } from 'react-native-image-picker';
 import { Colors } from '../../utils/Constants';
 
 const { width } = Dimensions.get('window');
+const selfieSize = width * 0.6;
 
 const SelfieUploadScreen = ({ navigation }) => {
   const [photo, setPhoto] = useState(null);
@@ -26,104 +27,114 @@ const SelfieUploadScreen = ({ navigation }) => {
   };
 
   const handleSubmit = () => {
-    console.log('Photo submitted:', photo);
     navigation.navigate('AddressConformation');
   };
 
   return (
-    <LinearGradient
-      colors={[Colors.primary_light, '#ffffff']}
-      style={styles.gradient}
-    >
-      <View style={styles.container}>
-        <Text style={styles.title}>Submit your Selfie</Text>
-        <Text style={styles.subtitle}>Your data is completely secure with us</Text>
-
-        <TouchableOpacity onPress={handleTakePhoto} style={styles.imageWrapper}>
-          {photo ? (
-            <Image source={{ uri: photo }} style={styles.selfie} />
-          ) : (
-            <View style={styles.placeholder}>
-              <Icon name="camera" size={40} color={Colors.disabled} />
-              <Text style={styles.placeholderText}>Tap to take a selfie</Text>
-            </View>
-          )}
-        </TouchableOpacity>
-
-        {photo && (
-          <TouchableOpacity style={styles.retakeBtn} onPress={handleTakePhoto}>
-            <Text style={styles.retakeText}>Retake</Text>
-          </TouchableOpacity>
-        )}
-
-        <TouchableOpacity onPress={handleSubmit} style={styles.buttonWrapper} activeOpacity={0.9}>
-          <LinearGradient colors={[Colors.primary, Colors.secondary]} style={styles.button}>
-            <Text style={styles.buttonText}>Submit</Text>
-          </LinearGradient>
-        </TouchableOpacity>
+    <View style={styles.container}>
+      <View style={styles.topContainer}>
+        <Text style={styles.title}>Take a Selfie</Text>
+        <Text style={styles.subtitle}>Make sure your face is clear and well-lit</Text>
       </View>
-    </LinearGradient>
+
+      <TouchableOpacity onPress={handleTakePhoto} style={styles.cameraWrapper}>
+        {photo ? (
+          <Image source={{ uri: photo }} style={styles.photo} />
+        ) : (
+          <View style={styles.placeholder}>
+            <Icon name="camera" size={36} color={Colors.disabled} />
+            <Text style={styles.placeholderText}>Tap to take a selfie</Text>
+          </View>
+        )}
+      </TouchableOpacity>
+
+      {photo && (
+        <TouchableOpacity onPress={handleTakePhoto} style={styles.retakeBtn}>
+          <Text style={styles.retakeText}>Retake Selfie</Text>
+        </TouchableOpacity>
+      )}
+
+      <View style={{ flex: 1 }} />
+
+      <TouchableOpacity
+        onPress={handleSubmit}
+        style={[styles.buttonWrapper, { opacity: photo ? 1 : 0.5 }]}
+        activeOpacity={photo ? 0.9 : 1}
+        disabled={!photo}
+      >
+        <LinearGradient colors={[Colors.primary, Colors.secondary]} style={styles.button}>
+          <Text style={styles.buttonText}>Submit & Continue</Text>
+        </LinearGradient>
+      </TouchableOpacity>
+    </View>
   );
 };
 
 export default SelfieUploadScreen;
 
 const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-  },
   container: {
     flex: 1,
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingTop: 60,
+    paddingBottom: 32,
+    backgroundColor: '#fff',
+  },
+  topContainer: {
     alignItems: 'center',
-    justifyContent: 'center',
+    marginBottom: 32,
   },
   title: {
-    fontSize: 24,
+    fontSize: 22,
     fontFamily: 'Okra-Bold',
     color: Colors.text,
-    marginBottom: 4,
   },
   subtitle: {
     fontSize: 14,
-    color: Colors.disabled,
-    marginBottom: 24,
     fontFamily: 'Okra-Regular',
+    color: Colors.disabled,
+    marginTop: 6,
+    textAlign: 'center',
   },
-  imageWrapper: {
-    width: width * 0.6,
-    height: width * 0.6,
-    borderRadius: width * 0.3,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+  cameraWrapper: {
+    width: selfieSize,
+    height: selfieSize,
+    borderRadius: selfieSize / 2,
+    backgroundColor: Colors.backgroundSecondary,
+    alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    overflow: 'hidden',
-    elevation: 5,
-    marginBottom: 20,
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
     borderWidth: 1,
     borderColor: Colors.border,
+    overflow: 'hidden',
+    marginBottom: 20,
   },
-  selfie: {
+  photo: {
     width: '100%',
     height: '100%',
   },
   placeholder: {
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   placeholderText: {
-    marginTop: 8,
-    color: Colors.disabled,
+    marginTop: 6,
     fontSize: 13,
+    color: Colors.disabled,
     fontFamily: 'Okra-Regular',
   },
   retakeBtn: {
-    marginBottom: 20,
+    alignSelf: 'center',
+    marginBottom: 30,
   },
   retakeText: {
-    color: Colors.primary,
-    fontFamily: 'Okra-Medium',
     fontSize: 14,
+    fontFamily: 'Okra-Medium',
+    color: Colors.primary,
     textDecorationLine: 'underline',
   },
   buttonWrapper: {
@@ -134,10 +145,6 @@ const styles = StyleSheet.create({
   button: {
     paddingVertical: 16,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 4,
   },
   buttonText: {
     color: '#fff',

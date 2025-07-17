@@ -29,7 +29,7 @@ export default function LoginScreen({ navigation }) {
   const [hasTyped, setHasTyped] = useState(false);
   const [phoneError, setPhoneError] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const [otp, setOtp] = useState(['', '', '', '']);
   const [timer, setTimer] = useState(59);
   const inputRefs = useRef([]);
   const intervalRef = useRef(null);
@@ -67,14 +67,14 @@ export default function LoginScreen({ navigation }) {
     const newOtp = [...otp];
     newOtp[index] = text;
     setOtp(newOtp);
-    if (text && index < 5) {
+    if (text && index < 3) {
       inputRefs.current[index + 1]?.focus();
     }
   };
 
   const handleOtpSubmit = () => {
     const fullOtp = otp.join('');
-    if (fullOtp.length === 6) {
+    if (fullOtp.length === 4) {
       clearInterval(intervalRef.current);
       Animated.parallel([
         Animated.timing(overlayAnim, {
@@ -90,11 +90,11 @@ export default function LoginScreen({ navigation }) {
       ]).start(() => {
         setShowOtp(false);
         setTimeout(() => {
-          navigation.navigate('Home');
+          navigation.navigate('MainTab');
         }, 10);
       });
     } else {
-      alert('Please enter a valid 6-digit OTP');
+      alert('Please enter a valid 4-digit OTP');
     }
   };
 
@@ -161,6 +161,7 @@ export default function LoginScreen({ navigation }) {
     inputRange: [0, 1],
     outputRange: [300, 0],
   });
+
 
   return (
     <LinearGradient colors={[Colors.primary, Colors.primary_light, Colors.secondary]} style={styles.gradient}>

@@ -8,6 +8,8 @@ import {
   ScrollView,
   Dimensions,
   TouchableOpacity,
+  SafeAreaView,
+  StatusBar,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -18,95 +20,120 @@ const { width } = Dimensions.get('window');
 
 export default function DashboardScreen({ navigation }) {
   return (
-    <View style={{ flex: 1, backgroundColor: '#fff' }}>
-      <LinearGradient
-        colors={[Colors.primary, Colors.primary_light, Colors.secondary]}
-        style={styles.headerContainer}
-      >
-        <View style={styles.topRow}>
-          <Icon name="account-circle" size={32} color="#fff" />
-          <View style={{ flex: 1, marginLeft: 10 }}>
-            <Text style={styles.username}>Gokul Kumari</Text>
-            <Text style={styles.greeting}>Good morning</Text>
-          </View>
-          <Icon name="bell-outline" size={24} color="#fff" />
-        </View>
-
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+      <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
+      <View style={{ flex: 1 }}>
         <LinearGradient
-          colors={['#ffffff33', '#ffffff11']}
-          style={styles.loanInfoCard}
+          colors={[Colors.primary, Colors.primary_light, Colors.secondary]}
+          style={styles.headerContainer}
         >
-          <View style={styles.loanBox}>
-            <Text style={styles.loanLabel}>Maximum Loan</Text>
-            <Text style={styles.loanValue}>₹100,000</Text>
-          </View>
-          <View style={styles.divider} />
-          <View style={styles.loanBox}>
-            <Text style={styles.loanLabel}>Maximum Tenure</Text>
-            <Text style={styles.loanValue}>90 Days</Text>
-          </View>
-        </LinearGradient>
-      </LinearGradient>
-
-      <ScrollView
-        contentContainerStyle={styles.contentWrapper}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* WHY CHOOSE US */}
-        <View style={styles.cardSection}>
-          <View style={styles.featureBox}>
-            <Icon name="clock-outline" size={24} color={Colors.primary} />
-            <Text style={styles.featureTitle}>Quick Approval</Text>
-            <Text style={styles.featureText}>Get approved in just 24 hours</Text>
-          </View>
-          <View style={styles.featureBox}>
-            <Icon name="shield-lock-outline" size={24} color={Colors.primary} />
-            <Text style={styles.featureTitle}>Secure Process</Text>
-            <Text style={styles.featureText}>Bank-level security & encryption</Text>
-          </View>
-        </View>
-
-        {/* STATS */}
-        <View style={styles.statsRow}>
-          {statsData.map((item, idx) => (
-            <View key={idx} style={styles.statItem}>
-              <Icon name={item.icon} size={22} color={Colors.primary} />
-              <Text style={styles.statLabel}>{item.label}</Text>
-              <Text style={styles.statSub}>{item.subLabel}</Text>
+          <View style={styles.topRow}>
+            <Icon name="account-circle" size={32} color="#fff" />
+            <View style={{ flex: 1, marginLeft: 10 }}>
+              <Text style={styles.username}>Gokul Kumari</Text>
+              <Text style={styles.greeting}>Good morning</Text>
             </View>
-          ))}
-        </View>
+            <Icon name="bell-outline" size={24} color="#fff" />
+          </View>
 
-        {/* BENEFITS */}
-        <View style={styles.benefitsCard}>
-          <Text style={styles.cardHeading}>Loan Benefits</Text>
-          {benefitsData.map((point, idx) => (
-            <View key={idx} style={styles.benefitItem}>
-              <Icon name="check-circle" size={18} color="green" />
-              <Text style={styles.benefitText}>{point}</Text>
-            </View>
-          ))}
-        </View>
-
-        {/* APPLY BUTTON */}
-        <TouchableOpacity
-          onPress={() => navigation.navigate('ApplyLoan')}
-          activeOpacity={0.8}
-        >
           <LinearGradient
-            colors={[Colors.primary, Colors.primary_light, Colors.secondary]}
-            style={styles.applyButton}
+            colors={['#ffffff33', '#ffffff11']}
+            style={styles.loanInfoCard}
           >
-            <Text style={styles.applyButtonText}>Apply Now</Text>
-            <Text style={styles.applySubText}>Get instant approval</Text>
+            <View style={styles.loanBox}>
+              <Text style={styles.loanLabel}>Maximum Loan</Text>
+              <Text style={styles.loanValue}>₹100,000</Text>
+            </View>
+            <View style={styles.divider} />
+            <View style={styles.loanBox}>
+              <Text style={styles.loanLabel}>Maximum Tenure</Text>
+              <Text style={styles.loanValue}>90 Days</Text>
+            </View>
           </LinearGradient>
-        </TouchableOpacity>
+        </LinearGradient>
 
-        <Text style={styles.footerNote}>
-          By proceeding, you agree to our Terms & Conditions and Privacy Policy
-        </Text>
-      </ScrollView>
-    </View>
+        <ScrollView
+          contentContainerStyle={styles.contentWrapper}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* WHY CHOOSE US */}
+          <View style={styles.cardSection}>
+            <View style={styles.featureBox}>
+              <Icon name="clock-outline" size={24} color={Colors.primary} />
+              <Text style={styles.featureTitle}>Quick Approval</Text>
+              <Text style={styles.featureText}>Get approved in just 24 hours</Text>
+            </View>
+            <View style={styles.featureBox}>
+              <Icon name="shield-lock-outline" size={24} color={Colors.primary} />
+              <Text style={styles.featureTitle}>Secure Process</Text>
+              <Text style={styles.featureText}>Bank-level security & encryption</Text>
+            </View>
+          </View>
+
+          {/* STATS */}
+          <View style={styles.statsRow}>
+            {statsData.map((item, idx) => (
+              <View key={idx} style={styles.statItem}>
+                <Icon name={item.icon} size={22} color={Colors.primary} />
+                <Text style={styles.statLabel}>{item.label}</Text>
+                <Text style={styles.statSub}>{item.subLabel}</Text>
+              </View>
+            ))}
+          </View>
+
+
+          {/* APPLY BUTTON */}
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ApplyLoan')}
+            activeOpacity={0.8}
+          >
+            <LinearGradient
+              colors={[Colors.primary, Colors.secondary]}
+              style={styles.applyButton}
+            >
+              <Text style={styles.applyButtonText}>Apply Now</Text>
+              <Text style={styles.applySubText}>Get instant approval</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+
+          {/* BENEFITS */}
+          <View style={styles.benefitsCard}>
+            <Text style={styles.cardHeading}>Loan Benefits</Text>
+            {benefitsData.map((point, idx) => (
+              <View key={idx} style={styles.benefitItem}>
+                <Icon name="check-circle" size={18} color="green" />
+                <Text style={styles.benefitText}>{point}</Text>
+              </View>
+            ))}
+          </View>
+
+          <Text style={styles.footerNote}>
+            By proceeding, you agree to our Terms & Conditions and Privacy Policy
+          </Text>
+        </ScrollView>
+      </View>
+
+      <View style={styles.bottomBar}>
+        <TouchableOpacity style={styles.navItem}>
+          <Icon name="home-outline" size={24} color={Colors.primary} />
+          <Text style={styles.navText}>Home</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navItem}>
+          <Icon name="history" size={24} color={Colors.disabled} />
+          <Text style={styles.navText}>History</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navItem}>
+          <Icon name="information-outline" size={24} color={Colors.disabled} />
+          <Text style={styles.navText}>Info</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navItem}>
+          <Icon name="bank-outline" size={24} color={Colors.disabled} />
+          <Text style={styles.navText}>Bank</Text>
+        </TouchableOpacity>
+      </View>
+
+    </SafeAreaView>
+
   );
 }
 
@@ -193,9 +220,8 @@ const styles = StyleSheet.create({
   statsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // marginVertical: 20,
-    marginTop: 0, // move up
-    marginBottom: 20, // keep bottom space
+    marginTop: 0,
+    marginBottom: 20,
   },
   statItem: {
     alignItems: 'center',
@@ -264,4 +290,33 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     marginTop: 4,
   },
+
+  bottomBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderColor: Colors.border,
+    paddingVertical: 10,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: -1 },
+    shadowRadius: 4,
+  },
+  navItem: {
+    alignItems: 'center',
+  },
+  navText: {
+    fontSize: 10,
+    fontFamily: Fonts.Medium,
+    marginTop: 2,
+    color: Colors.disabled,
+  },
+
 });

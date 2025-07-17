@@ -1,3 +1,5 @@
+
+
 import { useEffect, useState } from "react";
 import { Keyboard } from "react-native";
 
@@ -6,46 +8,28 @@ export default function useKeyboardOffsetHeight() {
     const [keyboardOffsetHeight, setKeyboardOffsetHeight] = useState(0)
 
     useEffect(() => {
-
-        const keyboardWillAndroidShowListener = Keyboard.addListener(
+        // For Android, we primarily rely on keyboardDidShow and keyboardDidHide
+        const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
             e => {
                 setKeyboardOffsetHeight(e.endCoordinates.height)
             }
         )
 
-
-        const keyboardWillAndroidHideListener = Keyboard.addListener(
+        const keyboardDidHideListener = Keyboard.addListener(
             'keyboardDidHide',
-            e => {
+            () => { // Keyboard is hidden, so offset height is 0
                 setKeyboardOffsetHeight(0)
             }
         )
 
-
-        const keyboardWillShowListener = Keyboard.addListener(
-            'keyboardWillShow',
-            e => {
-                setKeyboardOffsetHeight(e.endCoordinates.height)
-            }
-        )
-
-
-        const keyboardWillHideListener = Keyboard.addListener(
-            'keyboardWillHide',
-            e => {
-                setKeyboardOffsetHeight(e.endCoordinates.height)
-            }
-        )
-
+        // Cleanup function to remove listeners when component unmounts
         return () => {
-            keyboardWillAndroidHideListener.remove()
-            keyboardWillAndroidShowListener.remove()
-            keyboardWillHideListener.remove()
-            keyboardWillShowListener.remove()
+            keyboardDidShowListener.remove()
+            keyboardDidHideListener.remove()
         }
 
-    }, [])
+    }, []) // Empty dependency array means this effect runs once on mount and cleans up on unmount
 
     return keyboardOffsetHeight
 }
