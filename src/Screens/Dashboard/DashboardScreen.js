@@ -113,7 +113,7 @@ export default function DashboardScreen({ navigation }) {
         </ScrollView>
       </View>
 
-      <View style={styles.bottomBar}>
+      {/* <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.navItem}>
           <Icon name="home-outline" size={24} color={Colors.primary} />
           <Text style={styles.navText}>Home</Text>
@@ -130,7 +130,7 @@ export default function DashboardScreen({ navigation }) {
           <Icon name="bank-outline" size={24} color={Colors.disabled} />
           <Text style={styles.navText}>Bank</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
     </SafeAreaView>
 
@@ -291,32 +291,32 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 
-  bottomBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderTopWidth: 1,
-    borderColor: Colors.border,
-    paddingVertical: 10,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    elevation: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.05,
-    shadowOffset: { width: 0, height: -1 },
-    shadowRadius: 4,
-  },
-  navItem: {
-    alignItems: 'center',
-  },
-  navText: {
-    fontSize: 10,
-    fontFamily: Fonts.Medium,
-    marginTop: 2,
-    color: Colors.disabled,
-  },
+  // bottomBar: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-around',
+  //   alignItems: 'center',
+  //   backgroundColor: '#fff',
+  //   borderTopWidth: 1,
+  //   borderColor: Colors.border,
+  //   paddingVertical: 10,
+  //   position: 'absolute',
+  //   bottom: 0,
+  //   left: 0,
+  //   right: 0,
+  //   elevation: 10,
+  //   shadowColor: '#000',
+  //   shadowOpacity: 0.05,
+  //   shadowOffset: { width: 0, height: -1 },
+  //   shadowRadius: 4,
+  // },
+  // navItem: {
+  //   alignItems: 'center',
+  // },
+  // navText: {
+  //   fontSize: 10,
+  //   fontFamily: Fonts.Medium,
+  //   marginTop: 2,
+  //   color: Colors.disabled,
+  // },
 
 });

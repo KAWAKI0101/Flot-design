@@ -41,8 +41,6 @@ export default function AppNavigator() {
       <Stack.Screen name="Intro" component={IntroScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       {/* <Stack.Screen name="OTP" component={OtpScreen} /> */}
-      
-      
       <Stack.Screen name="MainTab" component={BottomTabNavigator} />
       
       <Stack.Screen name="ApplyLoan" component={ApplyLoanScreen} />
