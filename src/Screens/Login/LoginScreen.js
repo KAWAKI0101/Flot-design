@@ -17,8 +17,12 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import { BlurView } from '@react-native-community/blur';
 import { Colors, Fonts } from '../../utils/Constants';
+import CustomButton from '../../utils/CustomButton';
+import useBackButtonExitApp from '../../hooks/useBackButtonExitApp';
+
 
 export default function LoginScreen({ navigation }) {
+  useBackButtonExitApp();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(0)).current;
   const inputAnim = useRef(new Animated.Value(0)).current;
@@ -192,18 +196,22 @@ export default function LoginScreen({ navigation }) {
             <Animated.View
               style={[styles.buttonContainer, { opacity: phone.length === 10 ? 1 : 0.4, transform: [{ scale: phone.length === 10 ? 1 : 0.98 }] }]}
             >
-              <LinearGradient colors={[Colors.secondary, Colors.primary]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.gradientButton}>
+              <LinearGradient colors={[Colors.primary, Colors.primary_light]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.gradientButton}>
                 <Text style={styles.buttonText}>Login</Text>
               </LinearGradient>
             </Animated.View>
           </TouchableOpacity>
         </Animated.View>
 
-        {/* OTP Modal */}
         {showOtp && (
           <>
             <Animated.View style={[styles.blurOverlay, { opacity: overlayAnim }]}>
-              <BlurView style={RNStyleSheet.absoluteFill} blurType="light" blurAmount={6} reducedTransparencyFallbackColor="white" />
+              <BlurView
+                style={RNStyleSheet.absoluteFill}
+                blurType="light"
+                blurAmount={6}
+                reducedTransparencyFallbackColor="white"
+              />
             </Animated.View>
 
             <Animated.View style={[styles.otpModal, { transform: [{ translateY }] }]}>
@@ -231,7 +239,7 @@ export default function LoginScreen({ navigation }) {
               </TouchableOpacity>
 
               <Text style={styles.otpTitle}>Verify OTP</Text>
-              <Text style={styles.otpInfo}>A 6-digit code has been sent to +91-{phone}</Text>
+              <Text style={styles.otpInfo}>A 4-digit code has been sent to +91-{phone}</Text>
               <Text style={styles.otpSub}>Enter the code below to continue.</Text>
 
               <View style={styles.otpBoxes}>
@@ -242,22 +250,34 @@ export default function LoginScreen({ navigation }) {
                     style={styles.otpBox}
                     keyboardType="numeric"
                     maxLength={1}
-                    onChangeText={(text) => handleOtpChange(text, index)}
                     value={value}
+                    onChangeText={(text) => handleOtpChange(text, index)}
+                    onKeyPress={({ nativeEvent }) => {
+                      if (nativeEvent.key === 'Backspace' && otp[index] === '' && index > 0) {
+                        inputRefs.current[index - 1]?.focus();
+                        const newOtp = [...otp];
+                        newOtp[index - 1] = '';
+                        setOtp(newOtp);
+                      }
+                    }}
+                    autoFocus={index === 0}
                   />
                 ))}
               </View>
 
-              <Text style={styles.resend}>Resend OTP <Text style={{ color: 'red' }}>{`00:${timer < 10 ? '0' : ''}${timer}`}</Text></Text>
 
-              <TouchableOpacity onPress={handleOtpSubmit} style={styles.fixedButton}>
-                <LinearGradient colors={[Colors.primary, Colors.primary_light]} style={styles.gradientButton}>
-                  <Text style={styles.buttonText}>Next</Text>
-                </LinearGradient>
-              </TouchableOpacity>
+              <Text style={styles.resend}>
+                Resend OTP <Text style={{ color: 'red' }}>{`00:${timer < 10 ? '0' : ''}${timer}`}</Text>
+              </Text>
+
+              {/* Custom Button Usage */}
+              <View style={styles.fixedButton}>
+                <CustomButton title="Next" onPress={handleOtpSubmit} disabled={otp.join('').length !== 4} />
+              </View>
             </Animated.View>
           </>
         )}
+
       </KeyboardAvoidingView>
     </LinearGradient>
   );

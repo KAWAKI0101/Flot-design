@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DashboardScreen from '../Screens/Dashboard/DashboardScreen';
 import HistoryScreen from '../Screens/Dashboard/History';
 import InfoScreen from '../Screens/Dashboard/Information';
-import BankDetailsScreen from '../Screens/Dashboard/BankStatus';
+import Payment from '../Screens/Dashboard/Payment';
 import { Colors } from '../utils/Constants';
 
 const Tab = createBottomTabNavigator();
@@ -17,6 +17,11 @@ const BottomTabNavigator = () => {
         headerShown: false,
         tabBarActiveTintColor: Colors.primary,
         tabBarInactiveTintColor: Colors.disabled,
+        tabBarStyle: {
+          height: 70, // ⬅️ Increase the height (default is ~50)
+          paddingBottom: 10, // ⬅️ Optional: adjust vertical spacing
+          paddingTop: 10,
+        },
         tabBarIcon: ({ color, size }) => {
           let iconName;
           switch (route.name) {
@@ -29,18 +34,18 @@ const BottomTabNavigator = () => {
             case 'Info':
               iconName = 'information-outline';
               break;
-            case 'Bank':
-              iconName = 'bank-outline';
+            case 'Payment':
+              iconName = 'credit-card-outline';
               break;
           }
           return <Icon name={iconName} size={size} color={color} />;
         },
       })}
     >
-      <Tab.Screen name="Bank" component={BankDetailsScreen} />
+      <Tab.Screen name="Home" component={DashboardScreen} />
+      <Tab.Screen name="Payment" component={Payment} />
       <Tab.Screen name="History" component={HistoryScreen} />
       <Tab.Screen name="Info" component={InfoScreen} />
-      <Tab.Screen name="Home" component={DashboardScreen} />
     </Tab.Navigator>
   );
 };

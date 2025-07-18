@@ -3,11 +3,11 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   TouchableOpacity,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import LottieView from 'lottie-react-native';
 
 const LoanRejectedScreen = ({ navigation }) => {
   return (
@@ -19,9 +19,11 @@ const LoanRejectedScreen = ({ navigation }) => {
 
       {/* Content */}
       <View style={styles.content}>
-        <Image
-          source={require('../../assets/Image/Rejected.png')}
-          style={styles.image}
+        <LottieView
+          source={require('../../animations/fail.json')} // 👈 Your Lottie file
+          autoPlay
+          loop={false}
+          style={styles.lottie}
         />
 
         <Text style={styles.title}>Application Rejected</Text>
@@ -36,7 +38,7 @@ const LoanRejectedScreen = ({ navigation }) => {
       <TouchableOpacity
         style={styles.buttonWrapper}
         activeOpacity={0.9}
-        onPress={() => navigation.navigate('Home')}>
+        onPress={() => navigation.navigate('MainTab')}>
         <LinearGradient colors={['#FF4D4F', '#FF6A6A']} style={styles.button}>
           <Text style={styles.buttonText}>Back to Home</Text>
         </LinearGradient>
@@ -70,11 +72,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: 60,
   },
-  image: {
-    width: 140,
-    height: 140,
+  lottie: {
+    width: 180,
+    height: 180,
     marginBottom: 32,
-    resizeMode: 'contain',
   },
   title: {
     fontSize: 22,

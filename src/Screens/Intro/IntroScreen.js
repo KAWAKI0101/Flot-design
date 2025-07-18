@@ -56,7 +56,7 @@ export default function IntroScreen({ navigation }) {
           onPress={() => navigation.navigate('Login')}
         >
           <LinearGradient
-            colors={[Colors.secondary, Colors.primary]}
+            colors={[Colors.primary, Colors.primary_light]}
             style={styles.button}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}

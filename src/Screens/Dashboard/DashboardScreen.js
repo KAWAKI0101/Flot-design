@@ -15,6 +15,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Colors, Fonts } from '../../utils/Constants';
 import { statsData, benefitsData } from '../../DummyData/DashboardDummyData';
+import { Platform } from 'react-native';
+import LottieView from 'lottie-react-native';
 
 const { width } = Dimensions.get('window');
 
@@ -84,11 +86,12 @@ export default function DashboardScreen({ navigation }) {
 
           {/* APPLY BUTTON */}
           <TouchableOpacity
+          
             onPress={() => navigation.navigate('ApplyLoan')}
             activeOpacity={0.8}
           >
             <LinearGradient
-              colors={[Colors.primary, Colors.secondary]}
+              colors={[Colors.primary, Colors.primary_light]}
               style={styles.applyButton}
             >
               <Text style={styles.applyButtonText}>Apply Now</Text>
@@ -140,7 +143,7 @@ export default function DashboardScreen({ navigation }) {
 const styles = StyleSheet.create({
   headerContainer: {
     paddingHorizontal: 24,
-    paddingTop: 60,
+    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight ?? 20) + 20 : 60,
     paddingBottom: 40,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,

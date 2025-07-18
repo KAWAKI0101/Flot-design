@@ -11,22 +11,23 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import CheckBox from '@react-native-community/checkbox';
 import { Colors } from '../../utils/Constants';
-import AppHeader from '../../components/AppHeader'; // ✅ import the shared header
+import AppHeader from '../../components/AppHeader';
 
 const KYCDetailsScreen = ({ navigation }) => {
   const [panNumber, setPanNumber] = useState('');
   const [accepted, setAccepted] = useState(false);
+  const [submitted, setSubmitted] = useState(false); // for showing red borders
 
   const handleContinue = () => {
+    setSubmitted(true);
     if (!panNumber || !accepted) {
-      return alert('Please enter PAN and accept the Terms & Conditions.');
+      return; // no alert, just prevent navigation
     }
     navigation.navigate('Aadhaar');
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* ✅ Reusable AppHeader */}
       <AppHeader
         title="Complete your KYC"
         subtitle="Your Data is Completely Secure with us"
@@ -40,7 +41,10 @@ const KYCDetailsScreen = ({ navigation }) => {
       />
 
       <TextInput
-        style={styles.input}
+        style={[
+          styles.input,
+          submitted && !panNumber && styles.inputError, // red border if empty on submit
+        ]}
         placeholder="Enter PAN"
         placeholderTextColor={Colors.disabled}
         value={panNumber}
@@ -52,7 +56,7 @@ const KYCDetailsScreen = ({ navigation }) => {
         <CheckBox
           value={accepted}
           onValueChange={setAccepted}
-          tintColors={{ true: Colors.primary }}
+          tintColors={{ true: Colors.primary, false: submitted && !accepted ? 'red' : Colors.border }}
         />
         <Text style={styles.checkboxText}>
           I Accept the <Text style={styles.underline}>Term & Condition</Text>
@@ -60,7 +64,7 @@ const KYCDetailsScreen = ({ navigation }) => {
       </View>
 
       <TouchableOpacity style={styles.buttonWrapper} onPress={handleContinue} activeOpacity={0.9}>
-        <LinearGradient colors={[Colors.primary, Colors.secondary]} style={styles.button}>
+        <LinearGradient colors={[Colors.primary, Colors.primary_light]} style={styles.button}>
           <Text style={styles.buttonText}>Continue</Text>
         </LinearGradient>
       </TouchableOpacity>
@@ -93,6 +97,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: Colors.text,
     marginBottom: 24,
+  },
+  inputError: {
+    borderColor: 'red',
   },
   checkboxWrapper: {
     flexDirection: 'row',

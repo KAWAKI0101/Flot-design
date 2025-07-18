@@ -1,52 +1,69 @@
-import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { FC } from 'react'
+import React, { FC } from 'react';
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  ViewStyle,
+} from 'react-native';
 import { Colors, Fonts } from '../utils/Constants';
-// import CustomInput from './CustomInput';
 import CustomText from '../utils/CustomText';
 
 interface CustomButtonProps {
-  onPress:() => void;
+  onPress: () => void;
   title: string;
-  disabled: boolean;
-  loading: boolean;
-
+  disabled?: boolean;
+  loading?: boolean;
 }
 
-const CustomButton: FC<CustomButtonProps> = ({onPress, loading, title, disabled}) => {
-
+const CustomButton: FC<CustomButtonProps> = ({
+  onPress,
+  loading = false,
+  title,
+  disabled = false,
+}) => {
   return (
-    <TouchableOpacity 
-    onPress={onPress}
-    disabled={disabled}
-    style={[styles.btn, {
-      backgroundColor:disabled ? Colors.disabled : Colors.secondary
-    }]}
-    >{
-      loading ? 
-      <ActivityIndicator color="#fff" size='small' /> :
-      <CustomText style={styles.text} variant='h6' fontFamily={Fonts.SemiBold}>
-        {title} 
-      </CustomText>
-    }
+    <Pressable
+      onPress={onPress}
+      disabled={disabled || loading}
+      style={({ pressed }): ViewStyle => {
+        const backgroundColor = disabled
+          ? Colors.disabled
+          : pressed
+          ? Colors.primary_light
+          : Colors.primary;
 
-    </TouchableOpacity>
-  )
-}
+        return {
+          ...styles.btn,
+          backgroundColor,
+        } as ViewStyle; // ✅ ensure it's valid ViewStyle
+      }}
+    >
+      {loading ? (
+        <ActivityIndicator color="#fff" size="small" />
+      ) : (
+        <CustomText style={styles.text} variant="h6" fontFamily={Fonts.SemiBold}>
+          {title}
+        </CustomText>
+      )}
+    </Pressable>
+  );
+};
 
 const styles = StyleSheet.create({
-   btn:{
-    justifyContent:"center",
-    alignItems:"center",
-    borderRadius:10,
-    padding:15,
-    marginVertical:15,
-    width:"100%",
+  btn: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    marginVertical: 15,
+    width: '100%',
+  },
+  text: {
+    color: '#fff',
+    fontSize: 16,
+    fontFamily: Fonts.SemiBold,
+  },
+});
 
-   },
-   text:{
-    color:"#fff"
-   }
-})
-
-
-export default CustomButton
+export default CustomButton;

@@ -51,7 +51,7 @@ const ConfirmDetailsScreen = ({ navigation }) => {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      navigation.navigate('Home'); // Replace with actual next screen
+      navigation.navigate('MainTab'); // Replace with actual next screen
     }
   };
 

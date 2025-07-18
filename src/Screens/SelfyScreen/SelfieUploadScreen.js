@@ -62,7 +62,7 @@ const SelfieUploadScreen = ({ navigation }) => {
         activeOpacity={photo ? 0.9 : 1}
         disabled={!photo}
       >
-        <LinearGradient colors={[Colors.primary, Colors.secondary]} style={styles.button}>
+        <LinearGradient colors={[Colors.primary, Colors.primary_light]} style={styles.button}>
           <Text style={styles.buttonText}>Submit & Continue</Text>
         </LinearGradient>
       </TouchableOpacity>

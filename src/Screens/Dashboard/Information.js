@@ -87,6 +87,7 @@ const Information = () => {
         source={require('../../animations/info.json')} // Replace with your Lottie file
         autoPlay
         loop
+        speed={1}
         style={styles.animation}
       />
 
