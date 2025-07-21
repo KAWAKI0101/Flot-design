@@ -24,6 +24,7 @@
     "lottie-react-native": "^7.2.4",
     "react": "19.1.0",
     "react-native": "0.80.1",
+    "react-native-config": "^1.5.5",
     "react-native-gesture-handler": "^2.27.1",
     "react-native-image-picker": "^8.2.1",
     "react-native-linear-gradient": "^2.8.3",
@@ -31,8 +32,10 @@
     "react-native-otp-textinput": "^1.1.7",
     "react-native-reanimated": "^3.18.0",
     "react-native-responsive-fontsize": "^0.5.1",
+    "react-native-responsive-screen": "^1.4.2",
     "react-native-safe-area-context": "^5.5.2",
     "react-native-screens": "^4.11.1",
+    "react-native-size-matters": "^0.4.2",
     "react-native-svg": "^15.12.0",
     "react-native-tab-view": "^4.1.2",
     "react-native-vector-icons": "^10.2.0"
