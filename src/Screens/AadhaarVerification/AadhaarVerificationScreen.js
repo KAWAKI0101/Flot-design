@@ -17,18 +17,23 @@ import { BlurView } from '@react-native-community/blur';
 import { Colors } from '../../utils/Constants';
 import dummyAadhaarData from '../../DummyData/DummyOtpData';
 import { useFocusEffect } from '@react-navigation/native';
-import AppHeader from '../../components/AppHeader'; // ✅ Reusable header
+import AppHeader from '../../components/AppHeader';
+
+// Add responsive font size utility
+import { RFValue } from 'react-native-responsive-fontsize';
 
 const AadhaarVerificationScreen = ({ navigation }) => {
   const [aadhaarNumber, setAadhaarNumber] = useState(dummyAadhaarData.aadhaarNumber);
   const [showOtp, setShowOtp] = useState(false);
-  const [otp, setOtp] = useState(['', '', '', '']); // ✅ 4-digit OTP
+  const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [timer, setTimer] = useState(59);
 
   const otpAnim = useRef(new Animated.Value(0)).current;
   const overlayAnim = useRef(new Animated.Value(0)).current;
   const inputRefs = useRef([]);
   const timerRef = useRef(null);
+  const [otpError, setOtpError] = useState(false);
+
 
   const handleContinue = () => {
     Animated.parallel([
@@ -54,7 +59,6 @@ const AadhaarVerificationScreen = ({ navigation }) => {
         setTimer((prev) => prev - 1);
       }, 1000);
     }
-
     return () => clearInterval(timerRef.current);
   }, [showOtp, timer]);
 
@@ -65,7 +69,7 @@ const AadhaarVerificationScreen = ({ navigation }) => {
         overlayAnim.setValue(0);
         setShowOtp(false);
         setTimer(59);
-        setOtp(['', '', '', '']);
+        setOtp(['', '', '', '', '', '']);
         clearInterval(timerRef.current);
       };
     }, [])
@@ -75,29 +79,28 @@ const AadhaarVerificationScreen = ({ navigation }) => {
     const newOtp = [...otp];
     newOtp[index] = text;
     setOtp(newOtp);
-    if (text && index < otp.length - 1) {
+    if (text && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
   };
 
   const handleOtpSubmit = () => {
     const fullOtp = otp.join('');
-    if (fullOtp.length === 4) {
+    if (fullOtp.length === 6) {
       navigation.navigate('Selfie');
     } else {
-      alert('Please enter a valid 4-digit OTP');
+      setOtpError(true);
     }
   };
 
   const translateY = otpAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [300, 0],
+    outputRange: [RFValue(300), 0],
   });
 
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        {/* ✅ Reusable Header */}
         <AppHeader
           title="Complete your KYC"
           subtitle="Your Data is Completely Secure with us"
@@ -141,7 +144,7 @@ const AadhaarVerificationScreen = ({ navigation }) => {
 
           <Animated.View style={[styles.otpModal, { transform: [{ translateY }] }]}>
             <Text style={styles.otpTitle}>Verify Aadhaar OTP</Text>
-            <Text style={styles.otpInfo}>A 4-digit code has been sent to the +91XXXXXX9997</Text>
+            <Text style={styles.otpInfo}>A 6-digit code has been sent to +91XXXXXX9997</Text>
             <Text style={styles.otpSub}>Kindly enter the code to continue.</Text>
 
             <KeyboardAvoidingView
@@ -152,10 +155,19 @@ const AadhaarVerificationScreen = ({ navigation }) => {
                 <TextInput
                   key={index}
                   ref={(ref) => (inputRefs.current[index] = ref)}
-                  style={styles.otpBox}
+                  style={[styles.otpBox, otpError && value === '' && styles.otpErrorBorder,]}
                   keyboardType="numeric"
                   maxLength={1}
                   onChangeText={(text) => handleOtpChange(text, index)}
+                  onKeyPress={({ nativeEvent }) => {
+                    if (nativeEvent.key === 'Backspace' && otp[index] === '' && index > 0) {
+                      inputRefs.current[index - 1]?.focus();
+                      const newOtp = [...otp];
+                      newOtp[index - 1] = '';
+                      setOtp(newOtp);
+                    }
+                  }}
+                  autoFocus={index === 0}
                   value={value}
                 />
               ))}
@@ -182,49 +194,54 @@ export default AadhaarVerificationScreen;
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    padding: 24,
+    padding: RFValue(24),
     alignItems: 'center',
     backgroundColor: '#fff',
   },
   image: {
     width: '100%',
-    height: 220,
-    marginBottom: 24,
-    borderRadius: 10,
+    height: RFValue(220),
+    marginBottom: RFValue(24),
+    borderRadius: RFValue(10),
   },
   label: {
     alignSelf: 'flex-start',
-    fontSize: 14,
+    fontSize: RFValue(14),
     fontFamily: 'Okra-Medium',
     color: Colors.text,
-    marginBottom: 8,
+    marginBottom: RFValue(8),
   },
   input: {
     width: '100%',
     borderWidth: 1,
     borderColor: Colors.border,
-    borderRadius: 10,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
+    borderRadius: RFValue(10),
+    paddingVertical: RFValue(14),
+    paddingHorizontal: RFValue(16),
     backgroundColor: Colors.backgroundSecondary,
     fontFamily: 'Okra-Regular',
-    fontSize: 15,
+    fontSize: RFValue(15),
     color: Colors.text,
-    marginBottom: 24,
+    marginBottom: RFValue(24),
   },
   buttonWrapper: {
-    borderRadius: 12,
+    borderRadius: RFValue(12),
     overflow: 'hidden',
     width: '100%',
   },
+  otpErrorBorder: {
+    borderColor: 'red',
+    borderWidth: 2,
+  },
+
   button: {
-    paddingVertical: 16,
+    paddingVertical: RFValue(16),
     alignItems: 'center',
   },
   buttonText: {
     color: '#fff',
     fontFamily: 'Okra-Bold',
-    fontSize: 16,
+    fontSize: RFValue(16),
     letterSpacing: 1,
   },
   blurOverlay: {
@@ -236,53 +253,54 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    padding: 24,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    padding: RFValue(24),
+    borderTopLeftRadius: RFValue(20),
+    borderTopRightRadius: RFValue(20),
     backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOpacity: 0.2,
-    shadowRadius: 10,
+    shadowRadius: RFValue(10),
     elevation: 10,
     zIndex: 2,
   },
   otpTitle: {
-    fontSize: 18,
+    fontSize: RFValue(18),
     fontWeight: 'bold',
     color: Colors.text,
-    marginBottom: 8,
+    marginBottom: RFValue(8),
   },
   otpInfo: {
-    fontSize: 14,
+    fontSize: RFValue(14),
     color: Colors.disabled,
-    marginBottom: 8,
+    marginBottom: RFValue(8),
   },
   otpSub: {
-    fontSize: 14,
+    fontSize: RFValue(14),
     color: Colors.text,
-    marginBottom: 16,
+    marginBottom: RFValue(16),
   },
   otpBoxes: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 16,
+    justifyContent: 'flex-start',
+    marginBottom: RFValue(16),
   },
   otpBox: {
-    width: 50,
-    height: 50,
+    width: RFValue(41),
+    height: RFValue(50),
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: RFValue(10),
     borderColor: Colors.border,
     backgroundColor: Colors.backgroundSecondary,
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: RFValue(20),
     fontFamily: 'Okra-Bold',
     color: Colors.text,
+    marginRight: RFValue(10),
   },
   resend: {
-    fontSize: 13,
+    fontSize: RFValue(13),
     fontFamily: 'Okra-Regular',
     color: Colors.text,
-    marginBottom: 20,
+    marginBottom: RFValue(20),
   },
 });

@@ -19,13 +19,13 @@ const PaymentScreen = ({ navigation }) => {
   }
 
   const totalDue = activeLoan.repaymentAmount;
-  const tax = 10;
+  const tax = 18;
   const fee = totalDue - tax;
 
   return (
     <View style={styles.container}>
       <AppHeader
-        title="Electric bill"
+        title="Payment Details"
         onBackPress={() => navigation.goBack()}
       />
 
@@ -37,22 +37,22 @@ const PaymentScreen = ({ navigation }) => {
         style={styles.lottie}
       />
 
-      <Text style={styles.dateText}>
+      {/* <Text style={styles.dateText}>
         {activeLoan.createdAt} - {activeLoan.repaymentDate}
-      </Text>
+      </Text> */}
 
       <View style={styles.billCard}>
-        <Text style={styles.sectionTitle}>All the Bills</Text>
+        <Text style={styles.sectionTitle}>Pay Due's Amount </Text>
 
-        <View style={styles.infoRow}>
+        {/* <View style={styles.infoRow}>
           <Text style={styles.label}>Name</Text>
           <Text style={styles.value}>Jackson Maine</Text>
-        </View>
+        </View> */}
 
         <View style={styles.infoRow}>
-          <Text style={styles.label}>Address</Text>
+          <Text style={styles.label}>Loan No</Text>
           <Text style={[styles.value, { fontFamily: Fonts.Medium }]}>
-            403 East 4th Street,{"\n"}Santa Ana
+            CLN-10000210788
           </Text>
         </View>
 
@@ -61,14 +61,15 @@ const PaymentScreen = ({ navigation }) => {
           <Text style={styles.value}>+8424599721</Text>
         </View>
 
-        <View style={styles.infoRow}>
-          <Text style={styles.label}>Code</Text>
-          <Text style={styles.value}>{activeLoan.loanNo}</Text>
-        </View>
-
+       
         <View style={styles.infoRow}>
           <Text style={styles.label}>From</Text>
           <Text style={styles.value}>{activeLoan.createdAt}</Text>
+        </View>
+
+        <View style={styles.infoRow}>
+          <Text style={styles.label}>Till Now</Text>
+          <Text style={styles.value}>{activeLoan.TillnowAt}</Text>
         </View>
 
         <View style={styles.infoRow}>
@@ -76,13 +77,23 @@ const PaymentScreen = ({ navigation }) => {
           <Text style={styles.value}>{activeLoan.repaymentDate}</Text>
         </View>
 
-        <View style={styles.infoRow}>
+        {/* <View style={styles.infoRow}>
           <Text style={styles.label}>Electric fee</Text>
           <Text style={styles.amount}>${fee}</Text>
+        </View> */}
+         <View style={styles.infoRow}>
+          <Text style={styles.label}>Approval Amount</Text>
+          <Text style={styles.value}>{activeLoan.approvedAmount}</Text>
         </View>
 
         <View style={styles.infoRow}>
-          <Text style={styles.label}>Tax</Text>
+          <Text style={styles.label}>Disbursal Amount</Text>
+          <Text style={styles.value}>{activeLoan.DisbursalAmount}</Text>
+        </View>
+
+
+        <View style={styles.infoRow}>
+          <Text style={styles.label}>Tax + GST</Text>
           <Text style={[styles.amount, { color: Colors.primary }]}>${tax}</Text>
         </View>
 
@@ -95,12 +106,14 @@ const PaymentScreen = ({ navigation }) => {
           </Text>
         </View>
       </View>
+      
 
       <CustomButton
-        title="Pay the bill"
+        title="Pay Able Aomount"
         onPress={() => console.log('Pay')}
         loading={false}
         disabled={false}
+        styles={{color:"#fff"}}
       />
     </View>
   );

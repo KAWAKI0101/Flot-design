@@ -20,6 +20,8 @@ import { Colors, Fonts } from '../../utils/Constants';
 import CustomButton from '../../utils/CustomButton';
 import useBackButtonExitApp from '../../hooks/useBackButtonExitApp';
 
+// import react-native-responsive-fontsize
+import { RFValue } from 'react-native-responsive-fontsize';
 
 export default function LoginScreen({ navigation }) {
   useBackButtonExitApp();
@@ -37,7 +39,8 @@ export default function LoginScreen({ navigation }) {
   const [timer, setTimer] = useState(59);
   const inputRefs = useRef([]);
   const intervalRef = useRef(null);
-
+  const [otpError, setOtpError] = useState(false);
+  
   const handleLogin = () => {
     const isValid = /^[6-9]\d{9}$/.test(phone);
     setPhoneError(!isValid);
@@ -98,7 +101,7 @@ export default function LoginScreen({ navigation }) {
         }, 10);
       });
     } else {
-      alert('Please enter a valid 4-digit OTP');
+      setOtpError(true);
     }
   };
 
@@ -113,7 +116,7 @@ export default function LoginScreen({ navigation }) {
   useEffect(() => {
     const showSub = Keyboard.addListener('keyboardWillShow', () => {
       Animated.timing(slideAnim, {
-        toValue: -100,
+        toValue: -RFValue(100),
         duration: 300,
         useNativeDriver: true,
       }).start();
@@ -141,7 +144,7 @@ export default function LoginScreen({ navigation }) {
     if (!hasTyped && text.length > 0) {
       setHasTyped(true);
       Animated.timing(inputAnim, {
-        toValue: -30,
+        toValue: -RFValue(30),
         duration: 500,
         useNativeDriver: true,
       }).start();
@@ -163,9 +166,8 @@ export default function LoginScreen({ navigation }) {
 
   const translateY = otpAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [300, 0],
+    outputRange: [RFValue(300), 0],
   });
-
 
   return (
     <LinearGradient colors={[Colors.primary, Colors.primary_light, Colors.secondary]} style={styles.gradient}>
@@ -177,7 +179,7 @@ export default function LoginScreen({ navigation }) {
             <Text style={styles.label}>Enter Your Mobile</Text>
 
             <View style={[styles.inputContainer, phoneError && styles.errorBorder]}>
-              <Icon name="phone" size={20} color={Colors.primary} style={styles.icon} />
+              <Icon name="phone" size={RFValue(20)} color={Colors.primary} style={styles.icon} />
               <TextInput
                 style={styles.input}
                 placeholder="8770764615"
@@ -186,17 +188,26 @@ export default function LoginScreen({ navigation }) {
                 maxLength={10}
                 value={phone}
                 onChangeText={handleTextChange}
-              />
+                />
             </View>
           </Animated.View>
-
-          <Text style={styles.note}>Enter the Aadhaar Link Mobile Number for better Experience</Text>
+          
+            <Animated.View style={[styles.inputWrapper, { transform: [{ translateY: inputAnim }] }]}>
+                <Text style={styles.note}>Enter the Aadhaar Link Mobile Number for better Experience</Text>
+              </Animated.View>  
 
           <TouchableOpacity onPress={handleLogin} activeOpacity={0.9} style={styles.buttonWrapper}>
             <Animated.View
-              style={[styles.buttonContainer, { opacity: phone.length === 10 ? 1 : 0.4, transform: [{ scale: phone.length === 10 ? 1 : 0.98 }] }]}
+              style={[
+                styles.buttonContainer,
+                { opacity: phone.length === 10 ? 1 : 0.4, transform: [{ scale: phone.length === 10 ? 1 : 0.98 }] },
+              ]}
             >
-              <LinearGradient colors={[Colors.primary, Colors.primary_light]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.gradientButton}>
+              <LinearGradient
+                colors={[Colors.primary, Colors.primary_light]}
+                start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
+                style={styles.gradientButton}
+              >
                 <Text style={styles.buttonText}>Login</Text>
               </LinearGradient>
             </Animated.View>
@@ -233,9 +244,9 @@ export default function LoginScreen({ navigation }) {
                     clearInterval(intervalRef.current);
                   });
                 }}
-                style={{ position: 'absolute', right: 16, top: 16, zIndex: 99 }}
+                style={{ position: 'absolute', right: RFValue(16), top: RFValue(16), zIndex: 99 }}
               >
-                <Icon name="close" size={24} color={Colors.text} />
+                <Icon name="close" size={RFValue(24)} color={Colors.text} />
               </TouchableOpacity>
 
               <Text style={styles.otpTitle}>Verify OTP</Text>
@@ -247,7 +258,7 @@ export default function LoginScreen({ navigation }) {
                   <TextInput
                     key={index}
                     ref={(ref) => (inputRefs.current[index] = ref)}
-                    style={styles.otpBox}
+                    style={[styles.otpBox, otpError && value === '' && styles.otpErrorBorder]}
                     keyboardType="numeric"
                     maxLength={1}
                     value={value}
@@ -265,9 +276,9 @@ export default function LoginScreen({ navigation }) {
                 ))}
               </View>
 
-
               <Text style={styles.resend}>
-                Resend OTP <Text style={{ color: 'red' }}>{`00:${timer < 10 ? '0' : ''}${timer}`}</Text>
+                Resend OTP{' '}
+                <Text style={{ color: 'red' }}>{`00:${timer < 10 ? '0' : ''}${timer}`}</Text>
               </Text>
 
               {/* Custom Button Usage */}
@@ -277,7 +288,6 @@ export default function LoginScreen({ navigation }) {
             </Animated.View>
           </>
         )}
-
       </KeyboardAvoidingView>
     </LinearGradient>
   );
@@ -285,81 +295,85 @@ export default function LoginScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   gradient: { flex: 1 },
-  container: { flex: 1, padding: 30, justifyContent: 'center' },
-  title: { fontSize: 40, color: '#fff', fontFamily: Fonts.Bold, textAlign: 'center', marginBottom: 50 },
-  inputWrapper: { marginBottom: 30 },
-  label: { color: '#fff', fontSize: 16, marginBottom: 10, fontFamily: Fonts.Medium },
+  container: { flex: 1, padding: RFValue(30), justifyContent: 'center' },
+  title: { fontSize: RFValue(40), color: '#fff', fontFamily: Fonts.Bold, textAlign: 'center', marginBottom: RFValue(50) },
+  inputWrapper: { marginBottom: RFValue(30) },
+  label: { color: '#fff', fontSize: RFValue(16), marginBottom: RFValue(10), fontFamily: Fonts.Medium },
   inputContainer: {
     flexDirection: 'row',
     backgroundColor: '#fff',
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    borderRadius: RFValue(12),
+    paddingHorizontal: RFValue(12),
+    paddingVertical: RFValue(10),
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#fff',
   },
-  icon: { marginRight: 8 },
-  input: { flex: 1, fontSize: 16, color: Colors.text, fontFamily: Fonts.Regular },
-  note: { color: '#ddd', fontSize: 12, marginBottom: 20, fontFamily: Fonts.Regular },
+  icon: { marginRight: RFValue(8) },
+  input: { flex: 1, fontSize: RFValue(16), color: Colors.text, fontFamily: Fonts.Regular },
+  note: { color: '#ddd', fontSize: RFValue(12), marginBottom: RFValue(10), fontFamily: Fonts.Regular },
   buttonWrapper: { alignItems: 'center' },
   buttonContainer: {
     width: '90%',
-    borderRadius: 50,
+    borderRadius: RFValue(50),
     elevation: 6,
     shadowColor: Colors.primary,
     shadowOpacity: 0.3,
-    shadowOffset: { width: 0, height: 8 },
-    shadowRadius: 10,
+    shadowOffset: { width: 0, height: RFValue(8) },
+    shadowRadius: RFValue(10),
   },
   gradientButton: {
-    paddingVertical: 15,
-    borderRadius: 50,
+    paddingVertical: RFValue(15),
+    borderRadius: RFValue(50),
     alignItems: 'center',
     justifyContent: 'center',
   },
-  buttonText: { color: '#fff', fontSize: 18, fontFamily: Fonts.Bold, letterSpacing: 1 },
+  buttonText: { color: '#fff', fontSize: RFValue(18), fontFamily: Fonts.Bold, letterSpacing: 1 },
   errorBorder: { borderColor: 'red' },
   blurOverlay: { ...RNStyleSheet.absoluteFillObject, zIndex: 1 },
+    otpErrorBorder: {
+    borderColor: 'red',
+    borderWidth: 2,
+  },
   otpModal: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    padding: 24,
-    paddingBottom: 80,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    padding: RFValue(24),
+    paddingBottom: RFValue(80),
+    borderTopLeftRadius: RFValue(20),
+    borderTopRightRadius: RFValue(20),
     backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOpacity: 0.2,
-    shadowRadius: 10,
+    shadowRadius: RFValue(10),
     elevation: 10,
     zIndex: 2,
   },
-  otpTitle: { fontSize: 18, fontWeight: 'bold', color: Colors.text, marginBottom: 8 },
-  otpInfo: { fontSize: 14, color: Colors.disabled, marginBottom: 8 },
-  otpSub: { fontSize: 14, color: Colors.text, marginBottom: 16 },
-  otpBoxes: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16 },
+  otpTitle: { fontSize: RFValue(18), fontWeight: 'bold', color: Colors.text, marginBottom: RFValue(8) },
+  otpInfo: { fontSize: RFValue(14), color: Colors.disabled, marginBottom: RFValue(8) },
+  otpSub: { fontSize: RFValue(14), color: Colors.text, marginBottom: RFValue(16) },
+  otpBoxes: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: RFValue(16) },
   otpBox: {
-    width: 40,
-    height: 50,
+    width: RFValue(40),
+    height: RFValue(50),
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: RFValue(8),
     borderColor: Colors.border,
     backgroundColor: Colors.backgroundSecondary,
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: RFValue(18),
     fontFamily: Fonts.Bold,
     color: Colors.text,
   },
-  resend: { fontSize: 13, fontFamily: Fonts.Regular, color: Colors.text, marginBottom: 20 },
+  resend: { fontSize: RFValue(13), fontFamily: Fonts.Regular, color: Colors.text, marginBottom: RFValue(20) },
   fixedButton: {
     position: 'absolute',
-    bottom: 20,
-    left: 24,
-    right: 24,
-    borderRadius: 50,
+    bottom: RFValue(20),
+    left: RFValue(24),
+    right: RFValue(24),
+    borderRadius: RFValue(50),
     overflow: 'hidden',
   },
 });

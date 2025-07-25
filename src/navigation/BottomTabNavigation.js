@@ -22,6 +22,8 @@ const BottomTabNavigator = () => {
           paddingBottom: 10, // ⬅️ Optional: adjust vertical spacing
           paddingTop: 10,
         },
+        swipeEnabled: true,
+        animationEnabled:true,
         tabBarIcon: ({ color, size }) => {
           let iconName;
           switch (route.name) {

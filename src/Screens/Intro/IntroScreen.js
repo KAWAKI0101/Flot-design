@@ -11,8 +11,13 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { Colors, Fonts } from '../../utils/Constants';
+// Add RFValue
+import { RFValue } from 'react-native-responsive-fontsize';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
+const minSize = RFValue(240);
+const maxSize = RFValue(500);
+const imageSize = Math.max(minSize, Math.min(width * 1.50, maxSize));
 
 export default function IntroScreen({ navigation }) {
   return (
@@ -36,7 +41,6 @@ export default function IntroScreen({ navigation }) {
         <Text style={styles.labelRight}>Quick Loan{'\n'}Disbursal</Text>
       </View>
 
-      
       <View style={styles.bottomCard}>
         {/* <View style={styles.dotsContainer}>
           <View style={styles.dotInactive} />
@@ -44,12 +48,10 @@ export default function IntroScreen({ navigation }) {
           <View style={styles.dotInactive} />
         </View> */}
 
-        {/* Text */}
         <Text style={styles.description}>
           Get instant loan in <Text style={styles.highlight}>50 Minutes</Text>
         </Text>
 
-        {/* Button */}
         <TouchableOpacity
           style={styles.buttonWrapper}
           activeOpacity={0.9}
@@ -68,18 +70,19 @@ export default function IntroScreen({ navigation }) {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
   },
   headingWrapper: {
-    marginTop: 60,
-    paddingHorizontal: 24,
+    marginTop: RFValue(60),
+    paddingHorizontal: RFValue(24),
   },
   headingText: {
-    fontSize: 30,
-    lineHeight: 38,
+    fontSize: RFValue(30),
+    lineHeight: RFValue(38),
     fontFamily: Fonts.Bold,
   },
   headingBlack: {
@@ -88,78 +91,80 @@ const styles = StyleSheet.create({
   headingPrimary: {
     color: Colors.primary,
   },
-  
+
   imageContainer: {
-  width: '100%',
-  height: 260, // ✅ Fixed height for proper display
-  alignItems: 'center',
-  justifyContent: 'center',
-  marginTop: 30,
-  marginBottom: 10,
-  position: 'relative',
-},
-image: {
-  width: 500,
-  height: 500,
-},
-labelLeft: {
-  position: 'absolute',
-  left: 10,
-  top: '55%',
-  fontSize: 11,
-  fontFamily: Fonts.Regular,
-  color: Colors.text,
-  textAlign: 'left',
-},
-labelRight: {
-  position: 'absolute',
-  right: 10,
-  top: '35%',
-  fontSize: 11,
-  fontFamily: Fonts.Regular,
-  color: Colors.text,
-  textAlign: 'right',
-},
+    width: '100%',
+    height: RFValue(260),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: RFValue(30),
+    marginBottom: RFValue(10),
+    position: 'relative',
+  },
+  image: {
+    // width: width * 0.75, // 75% of device width
+    // height: width * 0.75, // keep square so it stays visually similar at all sizes
+    width:imageSize,
+    height:imageSize,
+  },
+  labelLeft: {
+    position: 'absolute',
+    left: RFValue(10),
+    top: '55%',
+    fontSize: RFValue(11),
+    fontFamily: Fonts.Regular,
+    color: Colors.text,
+    textAlign: 'left',
+  },
+  labelRight: {
+    position: 'absolute',
+    right: RFValue(10),
+    top: '35%',
+    fontSize: RFValue(11),
+    fontFamily: Fonts.Regular,
+    color: Colors.text,
+    textAlign: 'right',
+  },
 
   bottomCard: {
-    marginTop: 162,
+    marginTop: RFValue(140),
     backgroundColor: '#fff',
-    borderTopLeftRadius: 36,
-    borderTopRightRadius: 36,
-    paddingTop: 30,
-    paddingBottom: 40,
-    paddingHorizontal: 24,
+    borderTopLeftRadius: RFValue(36),
+    borderTopRightRadius: RFValue(36),
+    paddingTop: RFValue(30),
+    paddingBottom: RFValue(40),
+    paddingHorizontal: RFValue(24),
     shadowColor: '#000',
-    shadowOpacity: 0.05,
+    shadowOpacity: 0.15,
     shadowOffset: { width: 0, height: -4 },
-    shadowRadius: 10,
-    elevation: 10,
+    shadowRadius: RFValue(10),
+    elevation: 15,
   },
   dotsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 12,
+    marginBottom: RFValue(12),
   },
   dotInactive: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: RFValue(8),
+    height: RFValue(8),
+    borderRadius: RFValue(4),
     backgroundColor: '#D4D4D4',
-    marginHorizontal: 4,
+    marginHorizontal: RFValue(4),
   },
   dotActive: {
-    width: 20,
-    height: 8,
-    borderRadius: 4,
+    width: RFValue(20),
+    height: RFValue(8),
+    borderRadius: RFValue(4),
     backgroundColor: Colors.primary,
-    marginHorizontal: 4,
+    marginHorizontal: RFValue(4),
   },
   description: {
-    fontSize: 12,
+    fontSize: RFValue(12),
     fontFamily: Fonts.Regular,
     color: Colors.text,
     textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: RFValue(24),
   },
   highlight: {
     color: 'red',
@@ -169,18 +174,18 @@ labelRight: {
     width: '100%',
   },
   button: {
-    paddingVertical: 16,
-    borderRadius: 12,
+    paddingVertical: RFValue(16),
+    borderRadius: RFValue(12),
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 4,
     shadowColor: Colors.primary,
     shadowOpacity: 0.3,
-    shadowOffset: { width: 0, height: 8 },
-    shadowRadius: 10,
+    shadowOffset: { width: 0, height: RFValue(8) },
+    shadowRadius: RFValue(10),
   },
   buttonText: {
-    fontSize: 16,
+    fontSize: RFValue(16),
     fontFamily: Fonts.Bold,
     color: '#fff',
   },

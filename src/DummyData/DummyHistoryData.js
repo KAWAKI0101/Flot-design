@@ -3,13 +3,15 @@
 export const History = [
   {
     id: '1',
-    loanNo: 'FLT-10001',
-    loanAmountRequired: 50000,
-    approvedAmount: 48000,
-    repaymentAmount: 51000,
-    collectedAmount: 22000,
+    Loan_No: 'FLT-10001',
+    // loanAmountRequired: 50000,
+    approvedAmount: 22000,
+    DisbursalAmount: 19404,
+    repaymentAmount: 31460,
+    // collectedAmount: 22000,
     status: 'Active',
     createdAt: '2025-06-01',
+    TillnowAt: '2025-07-22',
     repaymentDate: '2025-12-01',
   },
   {
