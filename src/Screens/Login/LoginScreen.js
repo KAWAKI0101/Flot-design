@@ -40,7 +40,7 @@ export default function LoginScreen({ navigation }) {
   const inputRefs = useRef([]);
   const intervalRef = useRef(null);
   const [otpError, setOtpError] = useState(false);
-  
+
   const handleLogin = () => {
     const isValid = /^[6-9]\d{9}$/.test(phone);
     setPhoneError(!isValid);
@@ -97,7 +97,11 @@ export default function LoginScreen({ navigation }) {
       ]).start(() => {
         setShowOtp(false);
         setTimeout(() => {
-          navigation.navigate('MainTab');
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'MainTab' }],
+          });
+
         }, 10);
       });
     } else {
@@ -188,13 +192,13 @@ export default function LoginScreen({ navigation }) {
                 maxLength={10}
                 value={phone}
                 onChangeText={handleTextChange}
-                />
+              />
             </View>
           </Animated.View>
-          
-            <Animated.View style={[styles.inputWrapper, { transform: [{ translateY: inputAnim }] }]}>
-                <Text style={styles.note}>Enter the Aadhaar Link Mobile Number for better Experience</Text>
-              </Animated.View>  
+
+          <Animated.View style={[styles.inputWrapper, { transform: [{ translateY: inputAnim }] }]}>
+            <Text style={styles.note}>Enter the Aadhaar Link Mobile Number for better Experience</Text>
+          </Animated.View>
 
           <TouchableOpacity onPress={handleLogin} activeOpacity={0.9} style={styles.buttonWrapper}>
             <Animated.View
@@ -266,9 +270,11 @@ export default function LoginScreen({ navigation }) {
                     onKeyPress={({ nativeEvent }) => {
                       if (nativeEvent.key === 'Backspace' && otp[index] === '' && index > 0) {
                         inputRefs.current[index - 1]?.focus();
-                        const newOtp = [...otp];
-                        newOtp[index - 1] = '';
-                        setOtp(newOtp);
+                        setOtp(prev => {
+                          const out = [...prev];
+                          out[index - 1] = '';
+                          return out;
+                        });
                       }
                     }}
                     autoFocus={index === 0}
@@ -331,7 +337,7 @@ const styles = StyleSheet.create({
   buttonText: { color: '#fff', fontSize: RFValue(18), fontFamily: Fonts.Bold, letterSpacing: 1 },
   errorBorder: { borderColor: 'red' },
   blurOverlay: { ...RNStyleSheet.absoluteFillObject, zIndex: 1 },
-    otpErrorBorder: {
+  otpErrorBorder: {
     borderColor: 'red',
     borderWidth: 2,
   },
